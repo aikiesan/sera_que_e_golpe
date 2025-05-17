@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Sobre o Projeto - Será Que é Golpe?{% endblock %}
+
+{% block content %}
+<article class="page-content">
+    <h1 class="page-title">Sobre o "Será Que é Golpe?"</h1>
+    <p class="page-subtitle">Nossa missão é ajudar você a navegar com segurança no mundo digital</p>
+
+    <div class="content-section">
+        <h2>Nossa Missão: Ajudar Você a Navegar com Segurança</h2>
+
+        <p>
+            Bem-vindo ao "Será Que é Golpe?". Nossa plataforma nasceu da necessidade de criar uma ferramenta simples e acessível
+            para ajudar qualquer pessoa, especialmente aquelas que podem ser mais vulneráveis a fraudes online, a
+            identificar mensagens suspeitas antes que causem problemas.
+        </p>
+        <p>
+            Em um mundo digital cada vez mais complexo, os golpes estão se tornando mais sofisticados. Recebemos SMS,
+            mensagens no WhatsApp, e-mails e até ligações que tentam nos enganar para roubar nossos dados pessoais,
+            informações financeiras ou simplesmente nos causar prejuízo.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2>Como Funciona?</h2>
+        <p>
+            Nossa ferramenta utiliza a inteligência artificial avançada do Google Gemini para analisar o texto que você nos envia.
+            Ao colar a mensagem suspeita e clicar em "Verificar", nós:
+        </p>
+        <ul class="feature-list">
+            <li>Enviamos o texto para a IA de forma segura</li>
+            <li>A IA procura por padrões comuns em golpes conhecidos, táticas de engenharia social,
+                indicadores de urgência, solicitações de informações sensíveis e outros sinais de alerta</li>
+            <li>Com base nessa análise, fornecemos um nível de risco (Baixo, Médio, Alto, Muito Alto), um resumo
+                do que foi encontrado, alertas específicos e uma recomendação de como proceder</li>
+        </ul>
+        <p>
+            Também oferecemos a opção de analisar o texto extraído de imagens (prints de tela), pois muitos golpes
+            são compartilhados visualmente.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2>Por Que Criamos Este Projeto?</h2>
+        <p>
+            Este projeto foi desenvolvido como parte de uma competição de programação com foco em impacto social.
+            Acreditamos que a tecnologia pode ser uma poderosa aliada na prevenção de fraudes, e nosso objetivo
+            é empoderar você com informações para tomar decisões mais seguras.
+        </p>
+    </div>
+
+    <div class="content-section alert-section">
+        <h2>Importante: Nossas Limitações</h2>
+        <p>
+            Embora nos esforcemos para fornecer a análise mais precisa possível, é fundamental entender que
+            <strong>o "Será Que é Golpe?" é uma ferramenta de auxílio e não uma garantia absoluta de segurança.</strong>
+        </p>
+        <ul class="alert-list">
+            <li>A inteligência artificial, por mais avançada que seja, pode cometer erros ou não identificar golpes completamente novos</li>
+            <li>Sempre use seu bom senso. Se algo parece bom demais para ser verdade, provavelmente é</li>
+            <li>Em caso de dúvida, não clique em links, não forneça dados e procure uma segunda opinião de alguém de confiança ou
+                de canais oficiais das empresas mencionadas</li>
+        </ul>
+        <p>
+            Nossa ferramenta não armazena suas mensagens após a análise. A privacidade e a segurança dos seus dados
+            são importantes para nós.
+        </p>
+    </div>
+
+    <div class="content-section">
+        <h2>Contribua e Fique Seguro!</h2>
+        <p>
+            Esperamos que esta ferramenta seja útil! Explore também nossas outras seções com dicas de segurança
+            e informações sobre golpes recentes.
+        </p>
+        <p class="closing-message">
+            Juntos, podemos tornar a internet um lugar mais seguro para todos!
+        </p>
+    </div>
+</article>
+{% endblock %}

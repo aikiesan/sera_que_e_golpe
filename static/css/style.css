@@ -1,0 +1,1317 @@
+/* CSS Variables - for better maintainability and theming */
+:root {
+    /* Colors */
+    --color-primary: #1abc9c;
+    --color-primary-hover: #16a085;
+    --color-background: #2c3e50;
+    --color-surface: #34495e;
+    --color-surface-dark: #212f3c;
+    --color-text: #ecf0f1;
+    --color-text-muted: #bdc3c7;
+    --color-border: #4a6178;
+    --color-error: #e74c3c;
+    --color-error-dark: #c0392b;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 2.5rem;
+    
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    
+    /* Container */
+    --container-max-width: 900px;
+    --container-padding: 15px;
+}
+
+/* Reset básico e fontes */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+/* Links Globais - Improved accessibility with focus styles */
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-normal);
+}
+
+a:hover, a:focus {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+    outline: none;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Cabeçalho - Improved accessibility and mobile responsiveness */
+header {
+    background-color: var(--color-surface);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 4px solid var(--color-primary);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--color-text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+/* Navigation - Improved accessibility and mobile menu */
+nav.main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+nav .nav-link {
+    color: var(--color-text);
+    text-decoration: none;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-normal);
+    font-size: 0.95em;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+nav .nav-link:hover,
+nav .nav-link:focus-visible,
+nav .nav-link.active {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+/* Hero Section - Improved visual hierarchy and accessibility */
+.hero {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-sm);
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero h1 {
+    font-size: clamp(2em, 5vw, 2.5em);
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 700;
+}
+
+.hero .subtitle {
+    font-size: clamp(1em, 3vw, 1.25em);
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-lg);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Form Elements - Improved accessibility and visual feedback */
+#scam-form textarea,
+#image-upload-form input[type="file"] {
+    width: 100%;
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    border: 2px solid var(--color-border);
+    font-size: 1.1em;
+    background-color: var(--color-text);
+    color: var(--color-background);
+    min-height: 120px;
+    box-sizing: border-box;
+    transition: border-color var(--transition-normal);
+}
+
+#scam-form textarea:focus,
+#image-upload-form input[type="file"]:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+}
+
+/* Buttons - Improved accessibility and visual feedback */
+.button,
+#scam-form button,
+#analyze-image-button {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-xl);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.button:hover,
+#scam-form button:hover,
+#analyze-image-button:hover {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 188, 156, 0.2);
+}
+
+.button:focus-visible,
+#scam-form button:focus-visible,
+#analyze-image-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.4);
+}
+
+.button:active,
+#scam-form button:active,
+#analyze-image-button:active {
+    transform: translateY(0);
+}
+
+/* Result Section - Improved readability and visual hierarchy */
+#result-section {
+    background-color: var(--color-surface);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#result-section h2 {
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.8em;
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: var(--spacing-xs);
+}
+
+/* Alerts and Messages - Improved visual hierarchy */
+#alerts-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: var(--spacing-md) 0;
+}
+
+#alerts-list li {
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid var(--color-error);
+    border-radius: var(--border-radius-sm);
+}
+
+.error-text {
+    color: var(--color-text);
+    background-color: var(--color-error-dark);
+    border: 1px solid var(--color-error);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    margin-top: var(--spacing-lg);
+}
+
+/* Footer - Improved accessibility and spacing */
+footer {
+    background-color: var(--color-surface-dark);
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: var(--spacing-lg) 0;
+    margin-top: auto;
+    font-size: 0.9em;
+}
+
+footer .container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+footer a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin: 0 var(--spacing-xs);
+    transition: color var(--transition-normal);
+}
+
+footer a:hover,
+footer a:focus {
+    color: var(--color-primary);
+}
+
+/* Modal - Improved accessibility and mobile responsiveness */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.modal-content {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    width: 90%;
+    max-width: 600px;
+    margin: 8% auto;
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-md);
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading Indicator - Improved visual feedback */
+#loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+}
+
+#loading-indicator img {
+    width: 50px;
+    height: 50px;
+    opacity: 0.8;
+}
+
+/* Responsive Design - Mobile-first approach */
+@media (max-width: 768px) {
+    :root {
+        /* Adjust spacing for mobile */
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+    }
+
+    .container {
+        width: 95%;
+        padding: 0 var(--spacing-sm);
+    }
+
+    header .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav.main-nav {
+        margin-top: var(--spacing-sm);
+        justify-content: center;
+        width: 100%;
+    }
+
+    .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 1.8em;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: var(--spacing-lg);
+    }
+
+    #scam-form button,
+    #analyze-image-button {
+        width: 100%;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    .container {
+        width: 100%;
+        max-width: none;
+    }
+
+    header, footer, 
+    #scam-form button,
+    #analyze-image-button,
+    .modal {
+        display: none;
+    }
+}
+
+/* Utility Classes */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.text-center { text-align: center; }
+.mt-1 { margin-top: var(--spacing-xs); }
+.mt-2 { margin-top: var(--spacing-sm); }
+.mt-3 { margin-top: var(--spacing-md); }
+.mt-4 { margin-top: var(--spacing-lg); }
+.mt-5 { margin-top: var(--spacing-xl); }
+
+/* Conteúdo Principal */
+main {
+    flex-grow: 1;
+    padding: 2rem 0;
+}
+
+/* Classes de Nível de Risco */
+.risk-placeholder {
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: #ffffff; /* Light text for contrast */
+    background-color: #95a5a6; /* Darker background */
+}
+
+.risk-baixo {
+    color: #ffffff;
+    background-color: #27ae60; /* Slightly darker green */
+    font-weight: bold;
+}
+
+.risk-médio, .risk-medio {
+    color: #2c3e50; /* Dark text */
+    background-color: #f1c40f; /* Brighter yellow */
+    font-weight: bold;
+}
+
+.risk-alto {
+    color: #ffffff;
+    background-color: #e67e22; /* Darker orange */
+    font-weight: bold;
+}
+
+.risk-muito-alto {
+    color: #ffffff;
+    background-color: #c0392b; /* Darker red */
+    font-weight: bold;
+}
+
+.risk-indeterminado {
+    color: #ffffff;
+    background-color: #7f8c8d; /* Darker gray */
+    font-weight: bold;
+}
+
+/* Seção de Upload */
+.upload-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.upload-section h2 {
+    margin-bottom: 15px;
+    color: #ecf0f1;
+}
+
+#image-upload-form button {
+    background-color: #1abc9c;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+#image-upload-form button:hover {
+    background-color: #16a085;
+}
+
+/* Analysis Details Toggle Button */
+.toggle-details {
+    background-color: #3498db;
+    color: #ffffff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-details:hover {
+    background-color: #2980b9;
+}
+
+/* Estilos para a página Sobre */
+.sobre-container {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 20px;
+    line-height: 1.8;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.sobre-container h2 {
+    color: #1abc9c;
+    border-bottom: 2px solid #1abc9c;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+.sobre-container h3 {
+    color: #1abc9c;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.sobre-container p {
+    margin-bottom: 15px;
+    text-align: justify;
+    font-size: 1.1em;
+}
+
+.sobre-container ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+.sobre-container li {
+    margin-bottom: 10px;
+}
+
+.sobre-container a {
+    color: #1abc9c;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.sobre-container a:hover {
+    color: #16a085;
+}
+
+.logo-sobre {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ecf0f1;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 20px 0;
+    border-bottom: 3px solid #1abc9c;
+}
+
+/* Responsividade para a página Sobre */
+@media (max-width: 768px) {
+    .sobre-container {
+        padding: 1rem;
+    }
+
+    .sobre-container h2 {
+        font-size: 1.5em;
+    }
+
+    .sobre-container h3 {
+        font-size: 1.2em;
+    }
+
+    .sobre-container p,
+    .sobre-container ul {
+        font-size: 1em;
+    }
+
+    .logo-sobre {
+        font-size: 1.6em;
+    }
+}
+
+/* Estilos para a página de Golpes Recentes */
+.golpes-container {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 20px;
+    line-height: 1.8;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.golpes-title {
+    font-size: 2.2em;
+    color: #1abc9c;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.golpes-subtitle {
+    text-align: center;
+    color: #bdc3c7;
+    font-size: 1.2em;
+    margin-bottom: 2rem;
+}
+
+.golpes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.golpe-card {
+    background-color: #2c3e50;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.golpe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.golpe-icon {
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.golpe-card h3 {
+    color: #1abc9c;
+    font-size: 1.4em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.risk-tag {
+    display: inline-block;
+    padding: 0.3em 0.8em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.risk-tag.muito-alto {
+    background-color: #c0392b;
+    color: white;
+}
+
+.risk-tag.alto {
+    background-color: #e67e22;
+    color: white;
+}
+
+.risk-tag.medio {
+    background-color: #f1c40f;
+    color: #2c3e50;
+}
+
+.risk-tag.baixo {
+    background-color: #27ae60;
+    color: white;
+}
+
+.golpe-description {
+    color: #ecf0f1;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.golpe-alert {
+    background-color: rgba(26, 188, 156, 0.1);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #1abc9c;
+}
+
+.golpe-alert strong {
+    color: #1abc9c;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.golpe-alert ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.golpe-alert li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.golpe-alert li:before {
+    content: "⚠️";
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.dicas-seguranca {
+    background-color: #2c3e50;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.dicas-seguranca h2 {
+    color: #1abc9c;
+    font-size: 1.6em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.dicas-seguranca ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.dicas-seguranca li {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+}
+
+.dicas-seguranca li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #1abc9c;
+    font-weight: bold;
+}
+
+/* Responsividade para a página de Golpes */
+@media (max-width: 768px) {
+    .golpes-container {
+        padding: 1rem;
+    }
+
+    .golpes-title {
+        font-size: 1.8em;
+    }
+
+    .golpes-subtitle {
+        font-size: 1em;
+    }
+
+    .golpes-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .golpe-card {
+        padding: 1.2rem;
+    }
+
+    .dicas-seguranca {
+        padding: 1.5rem;
+    }
+
+    .dicas-seguranca h2 {
+        font-size: 1.4em;
+    }
+}
+
+/* Estilos para a página de Dicas de Segurança */
+.dicas-container {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 20px;
+    line-height: 1.8;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.dicas-title {
+    font-size: 2.2em;
+    color: #1abc9c;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.dicas-subtitle {
+    text-align: center;
+    color: #bdc3c7;
+    font-size: 1.2em;
+    margin-bottom: 2rem;
+}
+
+.dicas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.dica-card {
+    background-color: #2c3e50;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dica-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.dica-icon {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #1abc9c;
+}
+
+.dica-card h3 {
+    color: #1abc9c;
+    font-size: 1.4em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.dica-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.dica-list li {
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.dica-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #1abc9c;
+}
+
+.dicas-extras {
+    background-color: #2c3e50;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.dicas-extras h2 {
+    color: #1abc9c;
+    font-size: 1.6em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.dicas-extras ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.dicas-extras li {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+}
+
+.dicas-extras li:before {
+    content: "⚠️";
+    position: absolute;
+    left: 0;
+}
+
+/* Responsividade para a página de Dicas */
+@media (max-width: 768px) {
+    .dicas-container {
+        padding: 1rem;
+    }
+
+    .dicas-title {
+        font-size: 1.8em;
+    }
+
+    .dicas-subtitle {
+        font-size: 1em;
+    }
+
+    .dicas-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .dica-card {
+        padding: 1.2rem;
+    }
+
+    .dicas-extras {
+        padding: 1.5rem;
+    }
+
+    .dicas-extras h2 {
+        font-size: 1.4em;
+    }
+}
+
+/* Estilos para a página de Denúncia de Golpes */
+.denuncia-container {
+    background-color: #34495e;
+    color: #ecf0f1;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 20px;
+    line-height: 1.8;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.denuncia-title {
+    font-size: 2.2em;
+    color: #1abc9c;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.denuncia-subtitle {
+    text-align: center;
+    color: #bdc3c7;
+    font-size: 1.2em;
+    margin-bottom: 2rem;
+}
+
+.denuncia-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.denuncia-card {
+    background-color: #2c3e50;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.denuncia-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.denuncia-icon {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #1abc9c;
+}
+
+.denuncia-card h3 {
+    color: #1abc9c;
+    font-size: 1.4em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.denuncia-description {
+    color: #ecf0f1;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.denuncia-steps {
+    background-color: rgba(26, 188, 156, 0.1);
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #1abc9c;
+}
+
+.denuncia-steps strong {
+    color: #1abc9c;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.denuncia-steps ol {
+    list-style-type: decimal;
+    padding-left: 1.5rem;
+    margin: 0;
+}
+
+.denuncia-steps li {
+    margin-bottom: 0.5rem;
+}
+
+.denuncia-extras {
+    background-color: #2c3e50;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.denuncia-extras h2 {
+    color: #1abc9c;
+    font-size: 1.6em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.denuncia-extras ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.denuncia-extras li {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+}
+
+.denuncia-extras li:before {
+    content: "📝";
+    position: absolute;
+    left: 0;
+}
+
+.denuncia-links {
+    margin-top: 2rem;
+}
+
+.denuncia-links h2 {
+    color: #1abc9c;
+    font-size: 1.6em;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.link-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #2c3e50;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #ecf0f1;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.link-card:hover {
+    transform: translateY(-3px);
+    background-color: #3d5871;
+}
+
+.link-card i {
+    font-size: 1.5em;
+    color: #1abc9c;
+}
+
+/* Responsividade para a página de Denúncia */
+@media (max-width: 768px) {
+    .denuncia-container {
+        padding: 1rem;
+    }
+
+    .denuncia-title {
+        font-size: 1.8em;
+    }
+
+    .denuncia-subtitle {
+        font-size: 1em;
+    }
+
+    .denuncia-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .denuncia-card {
+        padding: 1.2rem;
+    }
+
+    .denuncia-extras {
+        padding: 1.5rem;
+    }
+
+    .denuncia-extras h2 {
+        font-size: 1.4em;
+    }
+
+    .links-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Page Content Structure */
+.page-content {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    margin-top: var(--spacing-lg);
+    line-height: 1.8;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.page-title {
+    font-size: clamp(1.8em, 4vw, 2.2em);
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 700;
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 3px solid var(--color-primary);
+}
+
+.page-subtitle {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: clamp(1em, 2.5vw, 1.2em);
+    margin-bottom: var(--spacing-xl);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content-section {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    background-color: var(--color-background);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--color-primary);
+}
+
+.content-section:last-child {
+    margin-bottom: 0;
+}
+
+.content-section h2 {
+    color: var(--color-primary);
+    font-size: clamp(1.3em, 3vw, 1.6em);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.content-section p {
+    margin-bottom: var(--spacing-md);
+    text-align: justify;
+    font-size: 1.05em;
+    line-height: 1.8;
+}
+
+.content-section p:last-child {
+    margin-bottom: 0;
+}
+
+/* Lists in Content */
+.feature-list,
+.alert-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: var(--spacing-md) 0;
+}
+
+.feature-list li,
+.alert-list li {
+    margin-bottom: var(--spacing-sm);
+    padding-left: var(--spacing-xl);
+    position: relative;
+}
+
+.feature-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.alert-list li::before {
+    content: "⚠️";
+    position: absolute;
+    left: 0;
+}
+
+/* Alert Section */
+.alert-section {
+    border-left-color: var(--color-error);
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+.alert-section h2 {
+    color: var(--color-error);
+    border-bottom-color: var(--color-error);
+}
+
+/* Closing Message */
+.closing-message {
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--color-primary);
+    font-weight: 500;
+    margin-top: var(--spacing-lg);
+}
+
+/* Footer Navigation */
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-sm);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .page-content {
+        padding: var(--spacing-md);
+    }
+
+    .content-section {
+        padding: var(--spacing-sm);
+    }
+
+    .feature-list li,
+    .alert-list li {
+        padding-left: var(--spacing-lg);
+    }
+
+    .footer-nav {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+}
+
+/* Denunciar button styles */
+.denuncia-header-button {
+    background-color: #ff4444;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.denuncia-header-button:hover {
+    background-color: #ff0000;
+    color: white;
+}
+
+.denuncia-header-button:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* Update main-nav to accommodate the new button */
+.main-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Make the tutorial button consistent with other nav items */
+.tutorial-button.nav-link {
+    background: none;
+    border: none;
+    font-size: inherit;
+    cursor: pointer;
+    padding: 0;
+    color: inherit;
+}
+
+.tutorial-button.nav-link:hover {
+    color: var(--accent-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-nav {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .denuncia-header-button {
+        margin-top: 8px;
+        width: 100%;
+        justify-content: center;
+    }
+}

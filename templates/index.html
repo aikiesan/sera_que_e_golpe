@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
+    <title>Será Que é Golpe?</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">🤔 Será Que é Golpe?</div>
+            <nav>
+                <a href="#" id="open-tutorial">Como Copiar e Colar?</a>
+                <a href="{{ url_for('golpes_recentes') }}" class="nav-link">Fique Alerta</a>
+                <a href="{{ url_for('dicas_seguranca') }}" class="nav-link">Dicas de Segurança</a>
+                <a href="{{ url_for('denunciar_golpes') }}" class="nav-link">Como Denunciar</a>
+                <a href="{{ url_for('sobre') }}" class="nav-link">Sobre</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero">
+                <h1>Será Que é Golpe?</h1>
+                <p class="subtitle">Cole a mensagem suspeita abaixo ou envie um print screen para verificar.</p>
+                
+                <form id="scam-form">
+                    <textarea id="message-input" name="message" rows="6" placeholder="Ex: Olá, você ganhou um prêmio! Clique aqui..."></textarea>
+                    <button type="submit" id="verify-button">Verificar Mensagem</button>
+                </form>
+            </section>
+
+            <!-- Seção de Upload de Imagem -->
+            <section class="upload-section">
+                <h2>Ou envie uma Imagem (Print Screen):</h2>
+                <form id="image-upload-form">
+                    <input type="file" id="image-file-input" name="image" accept="image/*" required>
+                    <button type="submit" id="analyze-image-button">Analisar Imagem</button>
+                </form>
+            </section>
+            <!-- Fim da Seção de Upload de Imagem -->
+
+            <section id="result-section" style="display: none;">
+                <h2>Resultado da Análise:</h2>
+                <div id="result-content">
+                    <!-- Conteúdo para análise de TEXTO -->
+                    <div id="text-analysis-result" style="display:none;">
+                        <p><strong>Nível de Risco:</strong> <span id="risk-level" class="risk-placeholder"></span></p>
+                        <p><strong>Resumo:</strong> <span id="summary" class="text-placeholder"></span></p>
+                        <p><strong>Pontos de Alerta:</strong></p>
+                        <ul id="alerts-list"></ul>
+                        <p><strong>Recomendação:</strong> <span id="recommendation" class="text-placeholder"></span></p>
+                        
+                        <details id="analysis-details-toggle" style="margin-top: 15px; display:none;">
+                            <summary>Mostrar/Ocultar Detalhes da Análise</summary>
+                            <div id="full-analysis-details" style="font-size: 0.9em; background-color: #f9f9f9; border: 1px solid #eee; padding: 10px; margin-top:5px; white-space: pre-wrap; word-wrap: break-word;">
+                            </div>
+                        </details>
+                    </div>
+
+                    <div id="image-analysis-result" style="display:none;">
+                        <p><strong>Texto Extraído da Imagem:</strong></p>
+                        <pre id="image-extracted-text" class="text-placeholder" style="white-space: pre-wrap; word-wrap: break-word; background-color: #f0f0f0; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto;"></pre>
+                        <div id="image-ocr-error" class="error-text" style="display:none;"></div>
+                        
+                        <div id="image-gemini-analysis-section" style="margin-top:15px; display:none;">
+                             <p><strong>Análise do Texto da Imagem (IA):</strong></p>
+                             <p><strong>Nível de Risco (Texto da Imagem):</strong> <span id="image-risk-level" class="risk-placeholder"></span></p>
+                             <p><strong>Resumo (Texto da Imagem):</strong> <span id="image-summary" class="text-placeholder"></span></p>
+                             <p><strong>Pontos de Alerta (Texto da Imagem):</strong></p>
+                             <ul id="image-alerts-list"></ul>
+                             <p><strong>Recomendação (Texto da Imagem):</strong> <span id="image-recommendation" class="text-placeholder"></span></p>
+                        </div>
+                        <div id="image-gemini-error" class="error-text" style="display:none;"></div>
+                    </div>
+                </div>
+                <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;">
+                    <p>Analisando... Por favor, aguarde.</p>
+                    <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Carregando..." style="width:50px; height:50px; display:block; margin: 10px auto;" id="loading-gif">
+                </div>
+                <div id="error-message" class="error-text" style="display: none;"></div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 AntiGolpe Masters - Projeto de Competição. Inspirado em <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">Have I Been Pwned</a>.</p>
+            <p>
+                <a href="{{ url_for('sobre') }}">Sobre o Projeto</a> |
+                <a href="{{ url_for('dicas_seguranca') }}">Dicas de Segurança</a> |
+                <a href="{{ url_for('denunciar_golpes') }}">Como Denunciar</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Modal do Tutorial -->
+    <div id="tutorial-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <h2>Como Copiar e Colar uma Mensagem</h2>
+            <p>Assista ao vídeo abaixo para aprender como copiar uma mensagem do seu aplicativo (WhatsApp, SMS, etc.) e colar aqui no site para verificar:</p>
+            
+            <!-- Substitua o iframe abaixo pelo código de incorporação do SEU vídeo do YouTube -->
+            <div class="video-container">
+                <iframe width="560" height="315" 
+                    src="https://www.youtube-nocookie.com/embed/Z47z2IC2Fnk?si=c2AOfyYVE0XGh4lL" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen></iframe>
+            </div>
+            <!-- Fim da área do vídeo -->
+
+            <p style="margin-top: 15px;">
+                Resumindo:
+            </p>
+            <ol style="margin-top: 5px;">
+                <li><strong>Abra</strong> a mensagem suspeita.</li>
+                <li><strong>Pressione e segure</strong> o texto da mensagem até selecioná-lo.</li>
+                <li>Toque em <strong>"Copiar"</strong>.</li>
+                <li><strong>Volte</strong> para esta página.</li>
+                <li><strong>Toque e segure</strong> na caixa de texto grande.</li>
+                <li>Toque em <strong>"Colar"</strong>.</li>
+                <li>Clique em <strong>"Verificar Mensagem"</strong>.</li>
+            </ol>
+            <p>Pronto! Aguarde a análise.</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

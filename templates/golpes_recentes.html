@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
+    <title>Fique Alerta - Golpes Recentes | Será Que é Golpe?</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        .page-content-container { /* Similar ao .sobre-container mas para conteúdo geral */
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            line-height: 1.7;
+        }
+        .page-content-container h2 {
+            color: #1abc9c;
+            border-bottom: 2px solid #1abc9c;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .page-content-container p.intro {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsivo */
+            gap: 20px; /* Espaço entre os cards */
+        }
+
+        .resource-card {
+            background-color: #2c3e50; /* Um pouco mais escuro que o container da página */
+            border: 1px solid #4a6178; /* Borda sutil */
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Para alinhar o botão no final */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .resource-card h3 {
+            color: #1abc9c;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .resource-card p.source-description {
+            font-size: 0.95em;
+            color: #bdc3c7; /* Cinza claro */
+            margin-bottom: 15px;
+            flex-grow: 1; /* Para empurrar o botão para baixo se o texto for curto */
+        }
+        .resource-card a.button-link {
+            display: inline-block;
+            background-color: #1abc9c;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: auto; /* Alinha o botão no final do flex container */
+        }
+        .resource-card a.button-link:hover {
+            background-color: #16a085;
+        }
+
+        /* Favicon ao lado do título do card - opcional e requer mais trabalho para obter favicons */
+        .resource-card h3 img.favicon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo"><a href="{{ url_for('index') }}" style="color: #ecf0f1; text-decoration: none;">🤔 Será Que é Golpe?</a></div>
+            <nav>
+                <a href="#" id="open-tutorial">Como Copiar e Colar?</a>
+                <a href="{{ url_for('golpes_recentes') }}" class="nav-link">Fique Alerta</a>
+                <a href="{{ url_for('dicas_seguranca') }}" class="nav-link">Dicas de Segurança</a>
+                <a href="{{ url_for('denunciar_golpes') }}" class="nav-link">Como Denunciar</a>
+                <a href="{{ url_for('sobre') }}" class="nav-link">Sobre</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="golpes-container">
+                <h1 class="golpes-title">🚨 Fique Alerta: Golpes em Circulação</h1>
+                <p class="golpes-subtitle">Conheça os golpes mais recentes identificados e saiba como se proteger</p>
+
+                <div class="golpes-grid">
+                    <!-- Card 1: Golpe do WhatsApp Clonado -->
+                    <div class="golpe-card">
+                        <div class="golpe-icon">📱</div>
+                        <h3>WhatsApp Clonado</h3>
+                        <div class="risk-tag muito-alto">Risco Muito Alto</div>
+                        <p class="golpe-description">
+                            Criminosos clonam o WhatsApp e se passam por você para pedir dinheiro aos seus contatos. 
+                            Geralmente alegam uma emergência e pedem transferência imediata.
+                        </p>
+                        <div class="golpe-alert">
+                            <strong>Como identificar:</strong>
+                            <ul>
+                                <li>Pedidos urgentes de dinheiro</li>
+                                <li>Mudança repentina de número</li>
+                                <li>Erros de digitação incomuns</li>
+                                <li>Pressão por resposta imediata</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Golpe do Falso Delivery -->
+                    <div class="golpe-card">
+                        <div class="golpe-icon">🚚</div>
+                        <h3>Falso Delivery</h3>
+                        <div class="risk-tag alto">Risco Alto</div>
+                        <p class="golpe-description">
+                            Mensagens falsas sobre entregas pendentes com links maliciosos. Alegam problemas na entrega 
+                            e pedem que você "atualize" seus dados ou pague uma taxa extra.
+                        </p>
+                        <div class="golpe-alert">
+                            <strong>Como identificar:</strong>
+                            <ul>
+                                <li>URLs suspeitas ou diferentes do oficial</li>
+                                <li>Erros de português no texto</li>
+                                <li>Pedidos de dados bancários</li>
+                                <li>Ameaças de cancelamento</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Golpe do Falso Prêmio -->
+                    <div class="golpe-card">
+                        <div class="golpe-icon">🎁</div>
+                        <h3>Falso Prêmio</h3>
+                        <div class="risk-tag alto">Risco Alto</div>
+                        <p class="golpe-description">
+                            Mensagens informando que você ganhou um prêmio valioso de uma grande empresa. 
+                            Pedem pagamento de "taxas" ou dados pessoais para liberar o suposto prêmio.
+                        </p>
+                        <div class="golpe-alert">
+                            <strong>Como identificar:</strong>
+                            <ul>
+                                <li>Prêmios sem participar de sorteios</li>
+                                <li>Pedidos de pagamento antecipado</li>
+                                <li>Promessas muito vantajosas</li>
+                                <li>Contatos de WhatsApp suspeitos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Golpe do Falso Suporte -->
+                    <div class="golpe-card">
+                        <div class="golpe-icon">🔧</div>
+                        <h3>Falso Suporte Técnico</h3>
+                        <div class="risk-tag alto">Risco Alto</div>
+                        <p class="golpe-description">
+                            Ligações ou mensagens de falsos técnicos alegando problemas em sua conta, internet ou dispositivo. 
+                            Pedem acesso remoto ou dados sensíveis para "resolver" o problema.
+                        </p>
+                        <div class="golpe-alert">
+                            <strong>Como identificar:</strong>
+                            <ul>
+                                <li>Contatos não solicitados</li>
+                                <li>Pedidos de acesso remoto</li>
+                                <li>Urgência excessiva</li>
+                                <li>Ameaças de bloqueio</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dicas-seguranca">
+                    <h2>⚠️ Dicas Gerais de Segurança</h2>
+                    <ul>
+                        <li>Nunca compartilhe códigos de verificação recebidos por SMS ou email</li>
+                        <li>Desconfie de ofertas muito vantajosas ou urgentes</li>
+                        <li>Não clique em links suspeitos recebidos por mensagem</li>
+                        <li>Sempre verifique a autenticidade do contato através de canais oficiais</li>
+                        <li>Ative a verificação em duas etapas em suas contas</li>
+                        <li>Mantenha seus aplicativos e sistema operacional atualizados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 AntiGolpe Masters - Projeto de Competição. Inspirado em <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">Have I Been Pwned</a>.</p>
+            <p>
+                <a href="{{ url_for('sobre') }}">Sobre o Projeto</a> |
+                <a href="{{ url_for('dicas_seguranca') }}">Dicas de Segurança</a> |
+                <a href="{{ url_for('denunciar_golpes') }}">Como Denunciar</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

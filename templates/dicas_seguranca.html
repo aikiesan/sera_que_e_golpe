@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self';">
+    <title>Dicas de Segurança | Será Que é Golpe?</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .page-content-container {
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            line-height: 1.7;
+        }
+        .page-content-container h2 {
+            color: #1abc9c;
+            border-bottom: 2px solid #1abc9c;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .page-content-container p.intro-text {
+            text-align: justify;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .safety-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #2c3e50; /* Cor de fundo um pouco mais escura para destacar a seção */
+            border-radius: 6px;
+            border-left: 4px solid #1abc9c; /* Barra lateral de destaque */
+        }
+        .safety-section h3 {
+            color: #1abc9c; /* Cor de destaque para subtítulos de seção */
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .safety-section ul {
+            list-style-type: none; /* Removemos os marcadores padrão para usar ícones ou formatar diferente */
+            padding-left: 0;
+        }
+        .safety-section ul li {
+            margin-bottom: 12px;
+            padding-left: 25px; /* Espaço para um possível ícone */
+            position: relative;
+        }
+        /* Adicionando um marcador personalizado (simples, pode ser um ícone de font) */
+        .safety-section ul li::before {
+            content: "✔"; /* Ou use um ícone de uma biblioteca como Font Awesome: \f00c */
+            color: #1abc9c; /* Cor do marcador */
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .safety-section p { /* Parágrafos dentro de uma dica */
+            margin-top: 5px;
+            margin-left: 25px; /* Alinhar com o texto do li */
+            color: #bdc3c7;
+            font-size: 0.95em;
+        }
+        .safety-section strong { /* Destaque dentro do texto da dica */
+            color: #ffffff;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo"><a href="{{ url_for('index') }}" style="color: #ecf0f1; text-decoration: none;">🤔 Será Que é Golpe?</a></div>
+            <nav>
+                <a href="#" id="open-tutorial">Como Copiar e Colar?</a>
+                <a href="{{ url_for('golpes_recentes') }}" class="nav-link">Fique Alerta</a>
+                <a href="{{ url_for('dicas_seguranca') }}" class="nav-link">Dicas de Segurança</a>
+                <a href="{{ url_for('denunciar_golpes') }}" class="nav-link">Como Denunciar</a>
+                <a href="{{ url_for('sobre') }}" class="nav-link">Sobre</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="dicas-container">
+                <h1 class="dicas-title">🛡️ Dicas de Segurança Digital</h1>
+                <p class="dicas-subtitle">Proteja-se contra golpes e fraudes com estas recomendações essenciais</p>
+
+                <div class="dicas-grid">
+                    <!-- Seção: Segurança em Redes Sociais -->
+                    <div class="dica-card">
+                        <div class="dica-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Redes Sociais</h3>
+                        <ul class="dica-list">
+                            <li>Ative a verificação em duas etapas em todas as suas contas</li>
+                            <li>Use senhas fortes e diferentes para cada rede social</li>
+                            <li>Não aceite pedidos de amizade de desconhecidos</li>
+                            <li>Evite compartilhar informações pessoais publicamente</li>
+                            <li>Revise suas configurações de privacidade regularmente</li>
+                        </ul>
+                    </div>
+
+                    <!-- Seção: WhatsApp -->
+                    <div class="dica-card">
+                        <div class="dica-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h3>WhatsApp</h3>
+                        <ul class="dica-list">
+                            <li>Ative a verificação em duas etapas nas configurações</li>
+                            <li>Nunca compartilhe códigos de verificação recebidos por SMS</li>
+                            <li>Desconfie de mensagens pedindo dinheiro, mesmo de contatos conhecidos</li>
+                            <li>Configure a privacidade da foto de perfil e status</li>
+                            <li>Evite clicar em links suspeitos recebidos por mensagem</li>
+                        </ul>
+                    </div>
+
+                    <!-- Seção: E-mails -->
+                    <div class="dica-card">
+                        <div class="dica-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>E-mails</h3>
+                        <ul class="dica-list">
+                            <li>Desconfie de e-mails pedindo dados pessoais ou bancários</li>
+                            <li>Verifique o endereço do remetente com atenção</li>
+                            <li>Não abra anexos de fontes desconhecidas</li>
+                            <li>Use um antivírus atualizado</li>
+                            <li>Ative autenticação em duas etapas no seu e-mail</li>
+                        </ul>
+                    </div>
+
+                    <!-- Seção: Compras Online -->
+                    <div class="dica-card">
+                        <div class="dica-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3>Compras Online</h3>
+                        <ul class="dica-list">
+                            <li>Compre apenas em sites conhecidos e confiáveis</li>
+                            <li>Verifique se o site usa HTTPS (cadeado no navegador)</li>
+                            <li>Pesquise a reputação da loja antes de comprar</li>
+                            <li>Guarde todos os comprovantes de compra</li>
+                            <li>Evite fazer compras em redes Wi-Fi públicas</li>
+                        </ul>
+                    </div>
+
+                    <!-- Seção: Senhas -->
+                    <div class="dica-card">
+                        <div class="dica-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <h3>Senhas</h3>
+                        <ul class="dica-list">
+                            <li>Use senhas longas com letras, números e símbolos</li>
+                            <li>Não use a mesma senha em vários serviços</li>
+                            <li>Utilize um gerenciador de senhas confiável</li>
+                            <li>Troque suas senhas regularmente</li>
+                            <li>Nunca compartilhe suas senhas com ninguém</li>
+                        </ul>
+                    </div>
+
+                    <!-- Seção: Dispositivos Móveis -->
+                    <div class="dica-card">
+                        <div class="dica-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Dispositivos Móveis</h3>
+                        <ul class="dica-list">
+                            <li>Mantenha seu sistema operacional atualizado</li>
+                            <li>Use bloqueio de tela com senha ou biometria</li>
+                            <li>Instale apps apenas das lojas oficiais</li>
+                            <li>Faça backup regular dos seus dados</li>
+                            <li>Não deixe seu Bluetooth ligado desnecessariamente</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="dicas-extras">
+                    <h2>⚠️ Lembre-se Sempre</h2>
+                    <ul>
+                        <li>Se uma oferta parece boa demais para ser verdade, provavelmente é um golpe</li>
+                        <li>Nunca tome decisões financeiras sob pressão ou urgência</li>
+                        <li>Em caso de dúvida, consulte os canais oficiais da empresa ou banco</li>
+                        <li>Mantenha-se informado sobre novos tipos de golpes</li>
+                        <li>Compartilhe estas dicas com amigos e familiares</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2024 AntiGolpe Masters - Projeto de Competição. Inspirado em <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">Have I Been Pwned</a>.</p>
+            <p>
+                <a href="{{ url_for('sobre') }}">Sobre o Projeto</a> |
+                <a href="{{ url_for('dicas_seguranca') }}">Dicas de Segurança</a> |
+                <a href="{{ url_for('denunciar_golpes') }}">Como Denunciar</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
