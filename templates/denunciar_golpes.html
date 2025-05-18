@@ -1,273 +1,142 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self';">
-    <title>Como Denunciar Golpes | Será Que é Golpe?</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        .page-content-container {
-            background-color: #34495e;
-            color: #ecf0f1;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            line-height: 1.7;
-        }
-        .page-content-container h2 {
-            color: #1abc9c;
-            border-bottom: 2px solid #1abc9c;
-            padding-bottom: 10px;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        .page-content-container p, .page-content-container ul {
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-        .page-content-container strong {
-            color: #ffffff;
-        }
-        .page-content-container blockquote {
-            border-left: 4px solid #1abc9c;
-            margin-left: 0;
-            padding-left: 15px;
-            font-style: italic;
-            color: #bdc3c7;
-        }
+{% extends "base.html" %}
 
-        .denuncia-section {
-            margin-bottom: 30px;
-            padding: 15px;
-            background-color: #2c3e50;
-            border-radius: 6px;
-        }
-        .denuncia-section h3 {
-            color: #1abc9c;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-        .denuncia-section .highlight-box {
-            background-color: rgba(26, 188, 156, 0.1); /* Leve tom da cor de destaque */
-            border: 1px solid #1abc9c;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-        .denuncia-section .highlight-box strong {
-            color: #1abc9c;
-        }
+{% block title %}Como Denunciar Golpes | Será Que é Golpe?{% endblock %}
 
-        .fala-br-button-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-        .fala-br-button {
-            display: inline-block;
-            background-color: #e74c3c; /* Cor de destaque para o botão principal */
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 1.3em;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border: none;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .fala-br-button:hover {
-            background-color: #c0392b; /* Tom mais escuro no hover */
-            transform: translateY(-2px);
-        }
-        .fala-br-button img { /* Se quiser adicionar um ícone ao botão */
-            width: 24px;
-            height: 24px;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
+{% block extra_head %}
+<style>
+    .denunciar-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-        .important-note {
-            background-color: #4a6178;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 5px solid #fd7e14; /* Laranja para atenção */
-            margin-top: 20px;
-        }
-        .important-note strong {
-            color: #fd7e14;
-        }
+    .denunciar-section {
+        background-color: #34495e;
+        border-radius: 8px;
+        padding: 25px;
+        margin-bottom: 30px;
+        color: #ecf0f1;
+    }
 
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <div class="logo"><a href="{{ url_for('index') }}" style="color: #ecf0f1; text-decoration: none;">🤔 Será Que é Golpe?</a></div>
-            <nav class="main-nav">
-                <div class="nav-group">
-                    <a href="{{ url_for('index') }}" class="nav-link">Início</a>
-                    <a href="{{ url_for('golpes_recentes') }}" class="nav-link">Fique Alerta</a>
-                </div>
-                <div class="nav-group">
-                    <a href="{{ url_for('dicas_seguranca') }}" class="nav-link">Dicas</a>
-                    <a href="{{ url_for('denunciar_golpes') }}" class="nav-link">Denunciar</a>
-                    <a href="{{ url_for('sobre') }}" class="nav-link">Sobre</a>
-                </div>
-            </nav>
-            <button id="open-tutorial" class="tutorial-button">Como Copiar e Colar?</button>
+    .denunciar-section h2 {
+        color: #1abc9c;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+        text-align: center;
+    }
+
+    .denunciar-section h3 {
+        color: #3498db;
+        margin: 25px 0 15px;
+        font-size: 1.4em;
+    }
+
+    .denunciar-section p {
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .denunciar-section ul {
+        list-style-type: none;
+        padding-left: 20px;
+    }
+
+    .denunciar-section ul li {
+        margin-bottom: 12px;
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .denunciar-section ul li:before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #1abc9c;
+    }
+
+    .denunciar-section a {
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .denunciar-section a:hover {
+        text-decoration: underline;
+    }
+
+    .important-note {
+        background-color: #c0392b;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+        font-weight: bold;
+    }
+
+    .contact-info {
+        background-color: #2c3e50;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+
+    .contact-info p {
+        margin: 5px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="denunciar-container">
+    <div class="denunciar-section">
+        <h2>🚨 Como Denunciar Golpes</h2>
+        
+        <p>Se você foi vítima de um golpe ou identificou uma tentativa de fraude, é importante denunciar. 
+           Isso ajuda a combater o crime e proteger outras pessoas.</p>
+
+        <div class="important-note">
+            ⚠️ Em caso de emergência ou se você estiver em perigo, ligue imediatamente para a Polícia (190) 
+            ou para o Disque Denúncia (181).
         </div>
-    </header>
 
-    <main>
-        <div class="container">
-            <div class="denuncia-container">
-                <h1 class="denuncia-title">🚨 Como Denunciar Golpes</h1>
-                <p class="denuncia-subtitle">Saiba onde e como denunciar diferentes tipos de golpes e fraudes</p>
+        <h3>1. Denuncie à Polícia</h3>
+        <ul>
+            <li>Registre um Boletim de Ocorrência (B.O.) na delegacia mais próxima</li>
+            <li>Leve todos os documentos e provas disponíveis (mensagens, e-mails, comprovantes)</li>
+            <li>Se o golpe foi online, você pode registrar o B.O. pela internet em alguns estados</li>
+        </ul>
 
-                <div class="denuncia-grid">
-                    <!-- Delegacia Virtual -->
-                    <div class="denuncia-card">
-                        <div class="denuncia-icon">
-                            <i class="fas fa-laptop"></i>
-                        </div>
-                        <h3>Delegacia Virtual</h3>
-                        <p class="denuncia-description">
-                            Registre um Boletim de Ocorrência online através da Delegacia Virtual do seu estado.
-                            É gratuito e você não precisa sair de casa.
-                        </p>
-                        <div class="denuncia-steps">
-                            <strong>Como fazer:</strong>
-                            <ol>
-                                <li>Acesse o site da Delegacia Virtual do seu estado</li>
-                                <li>Selecione a opção "Registrar Ocorrência"</li>
-                                <li>Escolha o tipo de crime (geralmente "Estelionato")</li>
-                                <li>Preencha todos os dados solicitados</li>
-                                <li>Anexe prints e comprovantes, se houver</li>
-                            </ol>
-                        </div>
-                    </div>
+        <h3>2. Denuncie aos Canais Oficiais</h3>
+        <ul>
+            <li><strong>WhatsApp:</strong> Encaminhe a mensagem suspeita para o número +55 61 99656-0088</li>
+            <li><strong>Banco Central:</strong> Use o canal <a href="https://www.bcb.gov.br/estabilidadefinanceira/denuncias" target="_blank" rel="noopener noreferrer">Fale Conosco</a></li>
+            <li><strong>Procon:</strong> Registre sua reclamação no <a href="https://www.consumidor.gov.br/" target="_blank" rel="noopener noreferrer">Consumidor.gov.br</a></li>
+            <li><strong>Safernet:</strong> Denuncie crimes cibernéticos em <a href="https://new.safernet.org.br/denuncie" target="_blank" rel="noopener noreferrer">safernet.org.br</a></li>
+        </ul>
 
-                    <!-- Procon -->
-                    <div class="denuncia-card">
-                        <div class="denuncia-icon">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <h3>Procon</h3>
-                        <p class="denuncia-description">
-                            Para golpes envolvendo compras, serviços ou empresas, registre sua reclamação no Procon.
-                        </p>
-                        <div class="denuncia-steps">
-                            <strong>Como fazer:</strong>
-                            <ol>
-                                <li>Acesse o site consumidor.gov.br</li>
-                                <li>Crie uma conta ou faça login</li>
-                                <li>Registre sua reclamação com detalhes</li>
-                                <li>Anexe documentos e comprovantes</li>
-                                <li>Acompanhe o andamento pelo site</li>
-                            </ol>
-                        </div>
-                    </div>
+        <h3>3. Denuncie ao Seu Banco</h3>
+        <ul>
+            <li>Entre em contato imediatamente com seu banco</li>
+            <li>Bloqueie cartões e contas se necessário</li>
+            <li>Solicite o estorno de valores indevidamente cobrados</li>
+            <li>Registre a ocorrência no canal de denúncias do banco</li>
+        </ul>
 
-                    <!-- Banco Central -->
-                    <div class="denuncia-card">
-                        <div class="denuncia-icon">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <h3>Banco Central</h3>
-                        <p class="denuncia-description">
-                            Para golpes financeiros envolvendo bancos, instituições financeiras ou PIX.
-                        </p>
-                        <div class="denuncia-steps">
-                            <strong>Como fazer:</strong>
-                            <ol>
-                                <li>Acesse o site do Banco Central</li>
-                                <li>Vá para "Atendimento ao Cidadão"</li>
-                                <li>Selecione "Registrar Denúncia"</li>
-                                <li>Detalhe o ocorrido e a instituição</li>
-                                <li>Guarde o número do protocolo</li>
-                            </ol>
-                        </div>
-                    </div>
+        <h3>4. Preserve as Evidências</h3>
+        <ul>
+            <li>Não apague mensagens, e-mails ou conversas</li>
+            <li>Faça prints das telas importantes</li>
+            <li>Guarde comprovantes de pagamentos</li>
+            <li>Anote datas, horários e detalhes da ocorrência</li>
+        </ul>
 
-                    <!-- Polícia Federal -->
-                    <div class="denuncia-card">
-                        <div class="denuncia-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3>Polícia Federal</h3>
-                        <p class="denuncia-description">
-                            Para crimes cibernéticos de maior escala ou que envolvam outros países.
-                        </p>
-                        <div class="denuncia-steps">
-                            <strong>Como fazer:</strong>
-                            <ol>
-                                <li>Acesse a página da Polícia Federal</li>
-                                <li>Procure por "Denúncia Digital"</li>
-                                <li>Selecione o tipo de crime</li>
-                                <li>Forneça o máximo de informações</li>
-                                <li>Inclua evidências se possível</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="denuncia-extras">
-                    <h2>📝 Dicas para uma Denúncia Efetiva</h2>
-                    <ul>
-                        <li>Reúna o máximo de informações possível antes de fazer a denúncia</li>
-                        <li>Guarde prints, e-mails, mensagens e comprovantes de pagamento</li>
-                        <li>Anote números de protocolo, datas e nomes de atendentes</li>
-                        <li>Seja claro e objetivo ao descrever o ocorrido</li>
-                        <li>Faça a denúncia o mais rápido possível após o golpe</li>
-                    </ul>
-                </div>
-
-                <div class="denuncia-links">
-                    <h2>🔗 Links Úteis</h2>
-                    <div class="links-grid">
-                        <a href="https://www.gov.br/pf/pt-br" target="_blank" rel="noopener noreferrer" class="link-card">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Polícia Federal</span>
-                        </a>
-                        <a href="https://www.consumidor.gov.br/" target="_blank" rel="noopener noreferrer" class="link-card">
-                            <i class="fas fa-balance-scale"></i>
-                            <span>Consumidor.gov.br</span>
-                        </a>
-                        <a href="https://www.bcb.gov.br/" target="_blank" rel="noopener noreferrer" class="link-card">
-                            <i class="fas fa-university"></i>
-                            <span>Banco Central</span>
-                        </a>
-                        <a href="https://new.safernet.org.br/" target="_blank" rel="noopener noreferrer" class="link-card">
-                            <i class="fas fa-globe"></i>
-                            <span>SaferNet</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div class="contact-info">
+            <h3>Contatos Úteis</h3>
+            <p>🚔 Polícia Civil: 197</p>
+            <p>🚓 Polícia Militar: 190</p>
+            <p>📞 Disque Denúncia: 181</p>
+            <p>🏦 Central de Atendimento do Banco Central: 145</p>
         </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>© 2024 AntiGolpe Masters - Projeto de Competição. Inspirado em <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">Have I Been Pwned</a>.</p>
-            <p>
-                <a href="{{ url_for('sobre') }}">Sobre o Projeto</a> |
-                <a href="{{ url_for('dicas_seguranca') }}">Dicas de Segurança</a> |
-                <a href="{{ url_for('denunciar_golpes') }}">Como Denunciar</a>
-            </p>
-        </div>
-    </footer>
-
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+    </div>
+</div>
+{% endblock %}

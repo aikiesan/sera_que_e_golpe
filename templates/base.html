@@ -3,28 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        script-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;
-        frame-src https://www.youtube.com https://www.youtube-nocookie.com;
-        style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
-        font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
-        img-src 'self' data: https:;
-        connect-src 'self';
-        object-src 'none';
-        base-uri 'self';
-        form-action 'self';
-        frame-ancestors 'none';
-        upgrade-insecure-requests;
-        block-all-mixed-content
-    ">
+    <meta name="csrf-token" content="{{ csrf_token_value }}">
     <title>{% block title %}Será Que é Golpe?{% endblock %}</title>
     
     <!-- Preload critical resources -->
     <link rel="preload" href="{{ url_for('static', filename='css/style.css') }}" as="style">
-    <link rel="preload" href="{{ url_for('static', filename='js/script.js') }}" as="script">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -41,15 +24,14 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="{{ url_for('index') }}" aria-label="Página Inicial">🤔 Será Que é Golpe?</a>
+                <a href="{{ url_for('main.index') }}" aria-label="Página Inicial">🤔 Será Que é Golpe?</a>
             </div>
             <nav class="main-nav" aria-label="Navegação principal">
-                <a href="{{ url_for('index') }}" class="nav-link{% if request.endpoint == 'index' %} active{% endif %}">Início</a>
-                <button id="open-tutorial" class="tutorial-button nav-link" aria-label="Abrir tutorial de como copiar e colar">Como Copiar e Colar?</button>
-                <a href="{{ url_for('golpes_recentes') }}" class="nav-link{% if request.endpoint == 'golpes_recentes' %} active{% endif %}">Golpes Conhecidos</a>
-                <a href="{{ url_for('dicas_seguranca') }}" class="nav-link{% if request.endpoint == 'dicas_seguranca' %} active{% endif %}">Dicas de Segurança</a>
-                <a href="{{ url_for('denunciar_golpes') }}" class="nav-link{% if request.endpoint == 'denunciar_golpes' %} active{% endif %}">Como Denunciar</a>
-                <a href="{{ url_for('sobre') }}" class="nav-link{% if request.endpoint == 'sobre' %} active{% endif %}">Sobre</a>
+                <a href="{{ url_for('main.index') }}" class="nav-link{% if request.endpoint == 'main.index' %} active{% endif %}">Início</a>
+                <a href="{{ url_for('main.golpes_recentes') }}" class="nav-link{% if request.endpoint == 'main.golpes_recentes' %} active{% endif %}">Golpes Conhecidos</a>
+                <a href="{{ url_for('main.dicas_seguranca') }}" class="nav-link{% if request.endpoint == 'main.dicas_seguranca' %} active{% endif %}">Dicas de Segurança</a>
+                <a href="{{ url_for('main.denunciar_golpes') }}" class="nav-link{% if request.endpoint == 'main.denunciar_golpes' %} active{% endif %}">Como Denunciar</a>
+                <a href="{{ url_for('main.sobre') }}" class="nav-link{% if request.endpoint == 'main.sobre' %} active{% endif %}">Sobre</a>
                 <a href="https://falabr.cgu.gov.br/web/home" target="_blank" rel="noopener noreferrer" class="denuncia-header-button">🚨 Denunciar no Fala.BR</a>
             </nav>
         </div>
@@ -65,47 +47,16 @@
         <div class="container">
             <p>© 2024 AntiGolpe Masters - Projeto de Competição. Inspirado em <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">Have I Been Pwned</a>.</p>
             <nav class="footer-nav" aria-label="Links do rodapé">
-                <a href="{{ url_for('sobre') }}">Sobre o Projeto</a>
-                <a href="{{ url_for('dicas_seguranca') }}">Dicas de Segurança</a>
-                <a href="{{ url_for('denunciar_golpes') }}">Como Denunciar</a>
+                <a href="{{ url_for('main.sobre') }}">Sobre o Projeto</a>
+                <a href="{{ url_for('main.dicas_seguranca') }}">Dicas de Segurança</a>
+                <a href="{{ url_for('main.denunciar_golpes') }}">Como Denunciar</a>
             </nav>
         </div>
     </footer>
 
-    <!-- Modal do Tutorial -->
-    <div id="tutorial-modal" class="modal" role="dialog" aria-labelledby="tutorial-title" aria-hidden="true">
-        <div class="modal-content">
-            <button class="close-button" aria-label="Fechar tutorial">&times;</button>
-            <h2 id="tutorial-title">Como Copiar e Colar uma Mensagem</h2>
-            <div class="video-container">
-                <iframe width="560" height="315" 
-                    src="https://www.youtube-nocookie.com/embed/Z47z2IC2Fnk?si=c2AOfyYVE0XGh4lL" 
-                    title="Tutorial em vídeo: Como copiar e colar mensagens" 
-                    frameborder="0" 
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    referrerpolicy="strict-origin-when-cross-origin" 
-                    allowfullscreen></iframe>
-            </div>
-            <div class="tutorial-steps">
-                <h3>Passo a passo:</h3>
-                <ol>
-                    <li><strong>Abra</strong> a mensagem suspeita</li>
-                    <li><strong>Pressione e segure</strong> o texto da mensagem até selecioná-lo</li>
-                    <li>Toque em <strong>"Copiar"</strong></li>
-                    <li><strong>Volte</strong> para esta página</li>
-                    <li><strong>Toque e segure</strong> na caixa de texto grande</li>
-                    <li>Toque em <strong>"Colar"</strong></li>
-                    <li>Clique em <strong>"Verificar Mensagem"</strong></li>
-                </ol>
-            </div>
-        </div>
-    </div>
-
     {% block scripts %}
     <!-- Load scripts at the end of body for better performance -->
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/tutorial-modal.js') }}" defer></script>
     {% endblock %}
 </body>
 </html> 

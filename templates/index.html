@@ -1,144 +1,308 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
-    <title>Será Que é Golpe?</title>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <div class="container">
-            <div class="logo">🤔 Será Que é Golpe?</div>
-            <nav>
-                <a href="#" id="open-tutorial">Como Copiar e Colar?</a>
-                <a href="{{ url_for('golpes_recentes') }}" class="nav-link">Fique Alerta</a>
-                <a href="{{ url_for('dicas_seguranca') }}" class="nav-link">Dicas de Segurança</a>
-                <a href="{{ url_for('denunciar_golpes') }}" class="nav-link">Como Denunciar</a>
-                <a href="{{ url_for('sobre') }}" class="nav-link">Sobre</a>
-            </nav>
-        </div>
-    </header>
+{% extends "base.html" %}
 
-    <main>
-        <div class="container">
-            <section class="hero">
-                <h1>Será Que é Golpe?</h1>
-                <p class="subtitle">Cole a mensagem suspeita abaixo ou envie um print screen para verificar.</p>
-                
-                <form id="scam-form">
-                    <textarea id="message-input" name="message" rows="6" placeholder="Ex: Olá, você ganhou um prêmio! Clique aqui..."></textarea>
-                    <button type="submit" id="verify-button">Verificar Mensagem</button>
-                </form>
-            </section>
+{% block title %}Analisador de Golpes com IA | Será Que é Golpe?{% endblock %}
 
-            <!-- Seção de Upload de Imagem -->
-            <section class="upload-section">
-                <h2>Ou envie uma Imagem (Print Screen):</h2>
-                <form id="image-upload-form">
-                    <input type="file" id="image-file-input" name="image" accept="image/*" required>
-                    <button type="submit" id="analyze-image-button">Analisar Imagem</button>
-                </form>
-            </section>
-            <!-- Fim da Seção de Upload de Imagem -->
+{% block content %}
+<div class="page-wrapper-index"> {# New wrapper for index-specific overall styling #}
 
-            <section id="result-section" style="display: none;">
-                <h2>Resultado da Análise:</h2>
-                <div id="result-content">
-                    <!-- Conteúdo para análise de TEXTO -->
-                    <div id="text-analysis-result" style="display:none;">
-                        <p><strong>Nível de Risco:</strong> <span id="risk-level" class="risk-placeholder"></span></p>
-                        <p><strong>Resumo:</strong> <span id="summary" class="text-placeholder"></span></p>
-                        <p><strong>Pontos de Alerta:</strong></p>
-                        <ul id="alerts-list"></ul>
-                        <p><strong>Recomendação:</strong> <span id="recommendation" class="text-placeholder"></span></p>
-                        
-                        <details id="analysis-details-toggle" style="margin-top: 15px; display:none;">
-                            <summary>Mostrar/Ocultar Detalhes da Análise</summary>
-                            <div id="full-analysis-details" style="font-size: 0.9em; background-color: #f9f9f9; border: 1px solid #eee; padding: 10px; margin-top:5px; white-space: pre-wrap; word-wrap: break-word;">
-                            </div>
-                        </details>
-                    </div>
-
-                    <div id="image-analysis-result" style="display:none;">
-                        <p><strong>Texto Extraído da Imagem:</strong></p>
-                        <pre id="image-extracted-text" class="text-placeholder" style="white-space: pre-wrap; word-wrap: break-word; background-color: #f0f0f0; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto;"></pre>
-                        <div id="image-ocr-error" class="error-text" style="display:none;"></div>
-                        
-                        <div id="image-gemini-analysis-section" style="margin-top:15px; display:none;">
-                             <p><strong>Análise do Texto da Imagem (IA):</strong></p>
-                             <p><strong>Nível de Risco (Texto da Imagem):</strong> <span id="image-risk-level" class="risk-placeholder"></span></p>
-                             <p><strong>Resumo (Texto da Imagem):</strong> <span id="image-summary" class="text-placeholder"></span></p>
-                             <p><strong>Pontos de Alerta (Texto da Imagem):</strong></p>
-                             <ul id="image-alerts-list"></ul>
-                             <p><strong>Recomendação (Texto da Imagem):</strong> <span id="image-recommendation" class="text-placeholder"></span></p>
-                        </div>
-                        <div id="image-gemini-error" class="error-text" style="display:none;"></div>
-                    </div>
+    {# Flash Messages #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages-container" role="alert" aria-live="assertive">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category|replace('message', 'info')|replace('danger', 'error') }}">
+                    {{ message }}
+                    <button type="button" class="close-alert" aria-label="Fechar alerta" onclick="this.parentElement.style.display='none'">×</button>
                 </div>
-                <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;">
-                    <p>Analisando... Por favor, aguarde.</p>
-                    <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Carregando..." style="width:50px; height:50px; display:block; margin: 10px auto;" id="loading-gif">
-                </div>
-                <div id="error-message" class="error-text" style="display: none;"></div>
-            </section>
-        </div>
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>© 2024 AntiGolpe Masters - Projeto de Competição. Inspirado em <a href="https://haveibeenpwned.com/" target="_blank" rel="noopener noreferrer">Have I Been Pwned</a>.</p>
-            <p>
-                <a href="{{ url_for('sobre') }}">Sobre o Projeto</a> |
-                <a href="{{ url_for('dicas_seguranca') }}">Dicas de Segurança</a> |
-                <a href="{{ url_for('denunciar_golpes') }}">Como Denunciar</a>
-            </p>
-        </div>
-    </footer>
-
-    <!-- Modal do Tutorial -->
-    <div id="tutorial-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">×</span>
-            <h2>Como Copiar e Colar uma Mensagem</h2>
-            <p>Assista ao vídeo abaixo para aprender como copiar uma mensagem do seu aplicativo (WhatsApp, SMS, etc.) e colar aqui no site para verificar:</p>
-            
-            <!-- Substitua o iframe abaixo pelo código de incorporação do SEU vídeo do YouTube -->
-            <div class="video-container">
-                <iframe width="560" height="315" 
-                    src="https://www.youtube-nocookie.com/embed/Z47z2IC2Fnk?si=c2AOfyYVE0XGh4lL" 
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    referrerpolicy="strict-origin-when-cross-origin" 
-                    allowfullscreen></iframe>
+            {% endfor %}
             </div>
-            <!-- Fim da área do vídeo -->
+        {% endif %}
+    {% endwith %}
 
-            <p style="margin-top: 15px;">
-                Resumindo:
-            </p>
-            <ol style="margin-top: 5px;">
-                <li><strong>Abra</strong> a mensagem suspeita.</li>
-                <li><strong>Pressione e segure</strong> o texto da mensagem até selecioná-lo.</li>
-                <li>Toque em <strong>"Copiar"</strong>.</li>
-                <li><strong>Volte</strong> para esta página.</li>
-                <li><strong>Toque e segure</strong> na caixa de texto grande.</li>
-                <li>Toque em <strong>"Colar"</strong>.</li>
-                <li>Clique em <strong>"Verificar Mensagem"</strong>.</li>
-            </ol>
-            <p>Pronto! Aguarde a análise.</p>
+    <section class="analysis-section text-analysis-section">
+        <div class="section-header">
+            <h1>Analisador de Golpes com IA</h1>
+            <p class="subtitle">Cole uma mensagem de texto para verificar possíveis riscos e receber uma análise detalhada.</p>
+        </div>
+
+        <form id="text-analysis-form" action="{{ url_for('main.process_analysis') }}" method="POST" class="analysis-form" aria-labelledby="text-analysis-heading">
+            <h2 id="text-analysis-heading" class="visually-hidden">Análise de Texto</h2>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <div class="input-header">
+                    <label for="message-input" class="visually-hidden">Mensagem para análise</label>
+                    <button type="button" class="help-button" onclick="openHelpModal()" aria-label="Como copiar e colar?">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                        </svg>
+                        Como Copiar e Colar?
+                    </button>
+                </div>
+                <textarea
+                    id="message-input"
+                    name="message"
+                    rows="10"
+                    placeholder="Cole aqui a mensagem suspeita que você recebeu..."
+                    aria-label="Caixa de texto para colar a mensagem suspeita"
+                    maxlength="5000"
+                    required
+                ></textarea>
+                <div class="char-counter" aria-live="polite">
+                    <span id="char-count">0</span>/5000 caracteres
+                </div>
+            </div>
+            <button type="submit" id="verify-text-button">
+                <span class="button-text">Analisar Mensagem</span>
+                <span class="spinner" style="display: none;" role="status" aria-hidden="true"></span>
+            </button>
+        </form>
+    </section>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal" role="dialog" aria-labelledby="helpModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <button type="button" class="close-modal" onclick="closeHelpModal()" aria-label="Fechar">×</button>
+            <h2 id="helpModalTitle">Como Copiar e Colar?</h2>
+            <div class="help-content">
+                <h3>No Celular:</h3>
+                <ol>
+                    <li>Toque e segure o texto que deseja copiar</li>
+                    <li>Selecione todo o texto usando as alças de seleção</li>
+                    <li>Toque em "Copiar"</li>
+                    <li>Toque na caixa de texto acima</li>
+                    <li>Toque e segure na caixa de texto</li>
+                    <li>Selecione "Colar"</li>
+                </ol>
+
+                <h3>No Computador:</h3>
+                <ol>
+                    <li>Selecione o texto que deseja copiar</li>
+                    <li>Pressione Ctrl+C (Windows/Linux) ou Command+C (Mac)</li>
+                    <li>Clique na caixa de texto acima</li>
+                    <li>Pressione Ctrl+V (Windows/Linux) ou Command+V (Mac)</li>
+                </ol>
+
+                <div class="help-tip">
+                    <strong>Dica:</strong> Você também pode usar o botão direito do mouse e selecionar "Copiar" e "Colar".
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+    <div class="section-separator">
+        <span>OU</span>
+    </div>
+
+    <section class="analysis-section image-analysis-section">
+        <div class="section-header">
+            <h2>Analisar Texto em Imagem</h2>
+            <p class="subtitle">Envie um print de tela ou foto de uma mensagem para extrair e analisar o texto.</p>
+        </div>
+
+        <form id="image-analysis-form" action="{{ url_for('main.process_analysis') }}" method="POST" enctype="multipart/form-data" class="analysis-form" aria-labelledby="image-analysis-heading">
+            <h2 id="image-analysis-heading" class="visually-hidden">Análise de Imagem</h2>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="form-group">
+                <div class="file-input-wrapper" tabindex="0" role="button" aria-label="Selecionar arquivo de imagem para análise">
+                    <input
+                        type="file"
+                        id="image-file-input"
+                        name="image"
+                        accept="image/png, image/jpeg, image/webp"
+                        aria-describedby="file-requirements-text"
+                        required
+                    >
+                    <div class="file-input-content"> {# Wrapper for icon and text #}
+                        <svg class="file-input-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                        <span id="file-name" class="file-name-text">Clique ou arraste uma imagem aqui</span>
+                        <img id="image-preview" src="#" alt="Pré-visualização da imagem selecionada" style="display: none;">
+                    </div>
+                </div>
+                <p class="file-requirements" id="file-requirements-text">
+                    Formatos: PNG, JPEG, WebP (Máx: 5MB)
+                </p>
+            </div>
+            <button type="submit" id="analyze-image-button">
+                <span class="button-text">Analisar Imagem</span>
+                <span class="spinner" style="display: none;" role="status" aria-hidden="true"></span>
+            </button>
+        </form>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{# Keep the JavaScript block from the previous good version of index.html #}
+{# It handles char count, file preview, spinner, and file input wrapper clickability #}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for text input
+    const messageInput = document.getElementById('message-input');
+    const charCountSpan = document.getElementById('char-count');
+    const charCounterDiv = messageInput ? messageInput.closest('.form-group').querySelector('.char-counter') : null;
+
+
+    if (messageInput && charCountSpan && charCounterDiv) {
+        messageInput.addEventListener('input', function() {
+            const charCount = this.value.length;
+            charCountSpan.textContent = charCount;
+
+            if (charCount > 4500) { // Example: 90% of 5000 limit
+                charCounterDiv.classList.add('near-limit');
+            } else {
+                charCounterDiv.classList.remove('near-limit');
+            }
+        });
+    }
+
+    // File input preview and validation
+    const imageFileInput = document.getElementById('image-file-input');
+    const imagePreview = document.getElementById('image-preview');
+    const fileNameSpan = document.getElementById('file-name');
+    const fileInputWrapper = document.querySelector('.file-input-wrapper');
+
+    if (imageFileInput && imagePreview && fileNameSpan && fileInputWrapper) {
+        // Handle file selection
+        imageFileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Formato de arquivo inválido. Por favor, selecione PNG, JPEG ou WebP.');
+                    this.value = ''; // Reset file input
+                    imagePreview.style.display = 'none';
+                    fileNameSpan.textContent = 'Clique ou arraste uma imagem aqui';
+                    fileInputWrapper.classList.remove('has-file');
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) { // 5MB
+                    alert('Arquivo muito grande. O limite é 5MB.');
+                    this.value = ''; // Reset file input
+                    imagePreview.style.display = 'none';
+                    fileNameSpan.textContent = 'Clique ou arraste uma imagem aqui';
+                    fileInputWrapper.classList.remove('has-file');
+                    return;
+                }
+
+                fileNameSpan.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    fileInputWrapper.classList.add('has-file');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.display = 'none';
+                fileNameSpan.textContent = 'Clique ou arraste uma imagem aqui';
+                fileInputWrapper.classList.remove('has-file');
+            }
+        });
+
+        // Handle wrapper click
+        fileInputWrapper.addEventListener('click', function(e) {
+            // Only trigger if clicking the wrapper itself or its content (not the preview)
+            if (e.target === fileInputWrapper || e.target.closest('.file-input-content')) {
+                imageFileInput.click();
+            }
+        });
+
+        // Handle keyboard navigation
+        fileInputWrapper.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                imageFileInput.click();
+            }
+        });
+
+        // Drag and drop handling
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileInputWrapper.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        fileInputWrapper.addEventListener('dragenter', () => fileInputWrapper.classList.add('dragover'), false);
+        fileInputWrapper.addEventListener('dragleave', () => fileInputWrapper.classList.remove('dragover'), false);
+        fileInputWrapper.addEventListener('drop', (e) => {
+            fileInputWrapper.classList.remove('dragover');
+            imageFileInput.files = e.dataTransfer.files;
+            // Manually trigger change event
+            const event = new Event('change', { bubbles: true });
+            imageFileInput.dispatchEvent(event);
+        }, false);
+    }
+
+    // Form submission loading state (spinner)
+    document.querySelectorAll('.analysis-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            if (form.id === 'text-analysis-form') {
+                const txtInput = form.querySelector('#message-input');
+                if (txtInput && txtInput.value.trim() === '') {
+                    alert('Por favor, insira uma mensagem para análise.');
+                    txtInput.focus();
+                    isValid = false;
+                }
+            }
+            if (form.id === 'image-analysis-form') {
+                const imgInput = form.querySelector('#image-file-input');
+                if (imgInput && imgInput.files.length === 0) {
+                    alert('Por favor, selecione uma imagem para análise.');
+                    // imgInput.focus(); // Focusing file input can be tricky
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                e.preventDefault(); // Prevent submission
+                return;
+            }
+
+            const button = form.querySelector('button[type="submit"]');
+            if (button) {
+                const buttonText = button.querySelector('.button-text');
+                const spinner = button.querySelector('.spinner');
+
+                if (buttonText) buttonText.style.display = 'none';
+                if (spinner) spinner.style.display = 'inline-block';
+                button.disabled = true;
+            }
+        });
+    });
+
+    // Help Modal Functions
+    window.openHelpModal = function() {
+        const modal = document.getElementById('helpModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    };
+
+    window.closeHelpModal = function() {
+        const modal = document.getElementById('helpModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling
+    };
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('helpModal');
+        if (event.target === modal) {
+            closeHelpModal();
+        }
+    };
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeHelpModal();
+        }
+    });
+});
+</script>
+{% endblock %}

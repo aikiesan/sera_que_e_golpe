@@ -1,0 +1,230 @@
+{# templates/results.html #}
+{% extends "base.html" %}
+
+{% block title %}Resultado da Análise - Será Que é Golpe?{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <h1 class="page-title">Resultado da Análise</h1>
+
+    <div class="content-section">
+        <h2>Entrada Recebida</h2>
+        {% if submission and submission.input_type %}
+            <p><strong>Tipo de Entrada:</strong> {{ submission.input_type }}</p>
+            {% if submission.input_type == "Imagem" %}
+                <p><em>Análise baseada no texto extraído da imagem.</em></p>
+            {% elif submission.original_input %}
+                <p><strong>Mensagem Analisada:</strong></p>
+                <pre class="extracted-text-box">{{ submission.original_input }}</pre>
+            {% else %}
+                <p>Nenhuma entrada fornecida para análise.</p>
+            {% endif %}
+        {% else %}
+            <p>Informações da submissão não disponíveis.</p>
+        {% endif %}
+    </div>
+    
+    <hr style="margin: var(--spacing-lg) 0;">
+
+    {% if analysis and not analysis.get('error') %}
+        <div class="content-section analysis-results">
+            <h2>Análise da IA:</h2>
+            
+            {% set text_analysis = analysis.get('text_analysis', {}) %}
+            
+            <p><strong>Nível de Risco:</strong> 
+                <span class="risk-placeholder risk-{{ text_analysis.get('risk_level', 'indeterminado').lower().replace(' ', '-').replace('é', 'e') }}">
+                    {{ text_analysis.get('risk_level', 'Indeterminado') }}
+                </span>
+            </p>
+            
+            <p><strong>Resumo:</strong> {{ text_analysis.get('summary', 'Não disponível.') }}</p>
+            
+            {% if text_analysis.get('alerts') %}
+                <p><strong>Pontos de Alerta:</strong></p>
+                <ul class="alerts-list-results">
+                    {% for alert in text_analysis.alerts %}
+                        <li>{{ alert }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p><strong>Pontos de Alerta:</strong> Nenhum alerta específico identificado.</p>
+            {% endif %}
+            
+            <p><strong>Recomendação:</strong> {{ text_analysis.get('recommendation', 'Não disponível.') }}</p>
+
+            {% if text_analysis.get('analysis_details') %}
+                <details class="analysis-details-container">
+                    <summary class="toggle-details">Mostrar Detalhes Completos da Análise da IA</summary>
+                    <pre class="full-analysis-box">{{ text_analysis.analysis_details | tojson(indent=2) }}</pre>
+                </details>
+            {% endif %}
+        </div>
+    {% elif analysis and analysis.get('error') %}
+        <div class="content-section error-results">
+            <h2>Erro na Análise pela IA:</h2>
+            <p class="error-text">{{ analysis.get('error') }}</p>
+            {% if analysis.get('text_analysis', {}).get('summary') %}
+                <p><strong>Resumo do Erro:</strong> {{ analysis.text_analysis.summary }}</p>
+            {% endif %}
+            <p><strong>Nível de Risco:</strong> 
+                <span class="risk-placeholder risk-{{ analysis.get('text_analysis', {}).get('risk_level', 'indeterminado').lower().replace(' ', '-') }}">
+                    {{ analysis.get('text_analysis', {}).get('risk_level', 'Indeterminado') }}
+                </span>
+            </p>
+        </div>
+    {% else %}
+        <div class="content-section error-results">
+            <p class="error-text">Não foi possível obter a análise da IA.</p>
+        </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: var(--spacing-xl);">
+        <a href="{{ url_for('main.index') }}" class="button">Analisar Outra Mensagem</a>
+    </div>
+</div>
+
+<style>
+    :root {
+        /* Colors */
+        --color-surface: #ffffff;
+        --color-surface-dark: #f8f9fa;
+        --color-text: #212529;
+        --color-text-muted: #6c757d;
+        --color-border: #dee2e6;
+        --color-error: #dc3545;
+        --color-warning: #ffc107;
+        --color-success: #28a745;
+        --color-info: #17a2b8;
+        
+        /* Risk Level Colors */
+        --color-risk-baixo: #28a745;
+        --color-risk-medio: #ffc107;
+        --color-risk-alto: #fd7e14;
+        --color-risk-muito-alto: #dc3545;
+        --color-risk-indeterminado: #6c757d;
+        --color-risk-nao-analisavel: #17a2b8;
+        
+        /* Spacing */
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+        
+        /* Border Radius */
+        --border-radius-sm: 0.25rem;
+        --border-radius-md: 0.5rem;
+    }
+
+    .page-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: var(--spacing-lg);
+    }
+
+    .content-section {
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-md);
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .extracted-text-box {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: var(--color-surface-dark);
+        color: var(--color-text-muted);
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-border);
+        border-radius: var(--border-radius-sm);
+        max-height: 250px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 0.9em;
+        line-height: 1.5;
+    }
+
+    .alerts-list-results {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .alerts-list-results li {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-left: 4px solid var(--color-error);
+        padding: var(--spacing-sm);
+        margin-bottom: var(--spacing-xs);
+        border-radius: var(--border-radius-sm);
+    }
+
+    .risk-placeholder {
+        display: inline-block;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: var(--border-radius-sm);
+        font-weight: bold;
+        color: white;
+    }
+
+    .risk-baixo { background-color: var(--color-risk-baixo); }
+    .risk-medio { background-color: var(--color-risk-medio); color: var(--color-text); }
+    .risk-alto { background-color: var(--color-risk-alto); }
+    .risk-muito-alto { background-color: var(--color-risk-muito-alto); }
+    .risk-indeterminado { background-color: var(--color-risk-indeterminado); }
+    .risk-nao-analisavel { background-color: var(--color-risk-nao-analisavel); }
+
+    .analysis-details-container summary {
+        cursor: pointer;
+        color: var(--color-text-muted);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .analysis-details-container summary:hover {
+        color: var(--color-text);
+    }
+
+    .full-analysis-box {
+        font-size: 0.9em;
+        background-color: var(--color-surface-dark);
+        border: 1px solid var(--color-border);
+        padding: var(--spacing-sm);
+        margin-top: var(--spacing-xs);
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        color: var(--color-text-muted);
+        border-radius: var(--border-radius-sm);
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .error-text {
+        color: var(--color-error);
+        font-weight: bold;
+    }
+
+    .button {
+        display: inline-block;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        background-color: var(--color-info);
+        color: white;
+        text-decoration: none;
+        border-radius: var(--border-radius-sm);
+        transition: background-color 0.2s;
+    }
+
+    .button:hover {
+        background-color: #138496;
+    }
+
+    @media (max-width: 768px) {
+        .page-content {
+            padding: var(--spacing-sm);
+        }
+        
+        .content-section {
+            padding: var(--spacing-md);
+        }
+    }
+</style>
+{% endblock %}

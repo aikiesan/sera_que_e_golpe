@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Function to get CSRF token from hidden input
+    function getCsrfToken() {
+        const csrfInput = document.querySelector('input[name="csrf_token"]');
+        if (csrfInput) {
+            return csrfInput.value;
+        }
+        console.error('CSRF token input not found!');
+        return null;
+    }
+
     const scamForm = document.getElementById('scam-form');
     const messageInput = document.getElementById('message-input');
     
@@ -16,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullAnalysisDetailsEl = document.getElementById('full-analysis-details');
     const analysisDetailsToggle = document.getElementById('analysis-details-toggle');
 
-    const imageExtractedTextEl = document.getElementById('image-extracted-text');
     const imageOcrErrorEl = document.getElementById('image-ocr-error');
     const imageGeminiAnalysisSection = document.getElementById('image-gemini-analysis-section');
     const imageRiskLevelEl = document.getElementById('image-risk-level');
@@ -98,10 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Função para resetar e popular resultados de análise de imagem
     function populateImageAnalysisResults(data) {
-        imageExtractedTextEl.textContent = data.extracted_text || '[Nenhum texto extraído ou erro na extração]';
-        
-        if (data.error && !data.extracted_text) {
-            imageOcrErrorEl.textContent = `Erro OCR: ${data.error}`;
+        if (data.error) {
+            imageOcrErrorEl.textContent = `Erro: ${data.error}`;
             imageOcrErrorEl.style.display = 'block';
             imageGeminiAnalysisSection.style.display = 'none';
         } else {
@@ -110,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.text_analysis) {
             if (data.text_analysis.error) {
-                imageGeminiErrorEl.textContent = `Erro na análise da IA: ${data.text_analysis.error}`;
+                imageGeminiErrorEl.textContent = `Erro na análise: ${data.text_analysis.error}`;
                 imageGeminiErrorEl.style.display = 'block';
                 imageGeminiAnalysisSection.style.display = 'none';
             } else {
@@ -139,9 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     imageRiskLevelEl.classList.add(riskClass);
                 }
             }
-        } else if (data.extracted_text) {
-            imageGeminiAnalysisSection.style.display = 'block';
-            imageGeminiErrorEl.textContent = 'Análise do texto pela IA não disponível ou não realizada.';
+        } else {
+            imageGeminiAnalysisSection.style.display = 'none';
+            imageGeminiErrorEl.textContent = 'Análise não disponível.';
             imageGeminiErrorEl.style.display = 'block';
         }
 
@@ -163,11 +170,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             showLoading(true);
 
+            const csrfToken = getCsrfToken();
+            if (!csrfToken) {
+                showLoading(false);
+                displayError('Erro de segurança (CSRF). Recarregue a página.');
+                return;
+            }
+
             try {
-                const response = await fetch('/verificar', {
+                const response = await fetch('/api/verificar', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
                     },
                     body: JSON.stringify({ message: message }),
                 });
@@ -182,45 +197,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (error) {
                 showLoading(false);
-                console.error('Erro ao verificar mensagem:', error);
-                displayError(error.message || 'Não foi possível conectar ao servidor ou processar a resposta.');
+                displayError(error.message || 'Erro ao processar a requisição.');
             }
         });
     }
 
-    // Event listener para o formulário de upload de imagem
+    // Event listener para o formulário de imagem
     if (imageUploadForm) {
         imageUploadForm.addEventListener('submit', async (event) => {
             event.preventDefault();
-            const imageFile = imageFileInput.files[0];
-
-            if (!imageFile) {
-                displayError('Por favor, selecione um arquivo de imagem.');
+            const file = imageFileInput.files[0];
+            if (!file) {
+                displayError('Por favor, selecione uma imagem para análise.');
+                imageFileInput.focus();
                 return;
             }
 
             showLoading(true);
-            const formData = new FormData();
-            formData.append('image', imageFile);
+
+            const csrfToken = getCsrfToken();
+            if (!csrfToken) {
+                showLoading(false);
+                displayError('Erro de segurança (CSRF). Recarregue a página.');
+                return;
+            }
+
+            const formData = new FormData(imageUploadForm);
+            formData.append('csrf_token', csrfToken);
 
             try {
-                const response = await fetch('/analyze_image', {
+                // Use the form's action URL if available, fallback to hardcoded URL
+                const uploadUrl = imageUploadForm.action || '/api/analyze_image_api';
+                const response = await fetch(uploadUrl, {
                     method: 'POST',
-                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
                 });
 
                 showLoading(false);
                 const data = await response.json();
 
                 if (!response.ok) {
-                     throw new Error(data.error || `Erro HTTP: ${response.status}`);
+                    throw new Error(data.error || `Erro HTTP: ${response.status}`);
                 }
                 populateImageAnalysisResults(data);
 
             } catch (error) {
                 showLoading(false);
-                console.error('Erro ao analisar imagem:', error);
-                displayError(error.message || 'Não foi possível conectar ao servidor ou processar a resposta da imagem.');
+                displayError(error.message || 'Erro ao processar a imagem.');
             }
         });
     }
@@ -242,4 +268,172 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.warn("Elementos do modal do tutorial não encontrados.");
     }
+
+    // Text analysis form handling
+    const textForm = document.getElementById('text-analysis-form');
+    const charCounter = document.getElementById('char-count');
+
+    if (messageInput) {
+        messageInput.addEventListener('input', function() {
+            const length = this.value.length;
+            charCounter.textContent = length;
+            
+            // Visual feedback when approaching limit
+            const counter = document.querySelector('.char-counter');
+            if (length > 4500) {
+                counter.classList.add('near-limit');
+            } else {
+                counter.classList.remove('near-limit');
+            }
+        });
+    }
+
+    if (textForm) {
+        textForm.addEventListener('submit', function(e) {
+            const message = messageInput.value.trim();
+            if (!message) {
+                e.preventDefault();
+                alert('Por favor, insira uma mensagem para análise.');
+                messageInput.focus();
+                return;
+            }
+
+            // Show loading state
+            const button = this.querySelector('button[type="submit"]');
+            const buttonText = button.querySelector('.button-text');
+            const spinner = button.querySelector('.spinner');
+            
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            button.disabled = true;
+        });
+    }
+
+    // Image analysis form handling
+    const imageForm = document.getElementById('image-analysis-form');
+    const imageInput = document.getElementById('image-file-input');
+    const preview = document.getElementById('image-preview');
+    const fileName = document.getElementById('file-name');
+
+    if (imageInput) {
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            
+            if (file) {
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Por favor, selecione apenas arquivos PNG, JPEG ou WebP.');
+                    this.value = '';
+                    preview.style.display = 'none';
+                    fileName.textContent = 'Nenhum arquivo selecionado';
+                    return;
+                }
+                
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('O arquivo é muito grande. Por favor, selecione um arquivo menor que 5MB.');
+                    this.value = '';
+                    preview.style.display = 'none';
+                    fileName.textContent = 'Nenhum arquivo selecionado';
+                    return;
+                }
+                
+                fileName.textContent = file.name;
+                
+                // Create preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+                fileName.textContent = 'Nenhum arquivo selecionado';
+            }
+        });
+    }
+
+    if (imageForm) {
+        imageForm.addEventListener('submit', function(e) {
+            const file = imageInput.files[0];
+            if (!file) {
+                e.preventDefault();
+                alert('Por favor, selecione uma imagem para análise.');
+                imageInput.focus();
+                return;
+            }
+
+            // Show loading state
+            const button = this.querySelector('button[type="submit"]');
+            const buttonText = button.querySelector('.button-text');
+            const spinner = button.querySelector('.spinner');
+            
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            button.disabled = true;
+        });
+    }
+
+    // Flash message handling
+    const closeButtons = document.querySelectorAll('.close-alert');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            this.parentElement.style.display = 'none';
+        });
+    });
+
+    // Tutorial modal handling
+    const modal = document.getElementById('tutorial-modal');
+    const openButton = document.getElementById('open-tutorial');
+    const closeButton = document.querySelector('.close');
+
+    if (modal && openButton && closeButton) {
+        openButton.onclick = function() {
+            modal.style.display = 'block';
+        }
+
+        closeButton.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    }
+
+    // Form submission handling with loading states
+    document.querySelectorAll('.analysis-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            // Get CSRF token
+            const csrfToken = getCsrfToken();
+            if (!csrfToken) {
+                e.preventDefault();
+                alert('Erro de segurança (CSRF). Por favor, recarregue a página.');
+                return;
+            }
+
+            // Add CSRF token to form if not present
+            let csrfInput = form.querySelector('input[name="csrf_token"]');
+            if (!csrfInput) {
+                csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrf_token';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+            }
+
+            // Show loading state
+            const button = this.querySelector('button[type="submit"]');
+            const buttonText = button.querySelector('.button-text');
+            const spinner = button.querySelector('.spinner');
+            
+            buttonText.style.display = 'none';
+            spinner.style.display = 'inline-block';
+            button.disabled = true;
+        });
+    });
 });

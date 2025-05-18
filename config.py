@@ -42,9 +42,11 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    WTF_CSRF_ENABLED = False  # Disable CSRF protection for local development
     
 class ProductionConfig(Config):
     DEBUG = False
+    WTF_CSRF_ENABLED = True  # Keep CSRF protection enabled for production
     # Add production-specific settings here
 
 # Create a config map

@@ -136,9 +136,9 @@ nav .nav-link.active {
 }
 
 .hero h1 {
-    font-size: clamp(2em, 5vw, 2.5em);
+    font-size: clamp(2em, 5vw, 2.8em);
     color: var(--color-text);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
     font-weight: 700;
 }
 
@@ -152,26 +152,217 @@ nav .nav-link.active {
 }
 
 /* Form Elements - Improved accessibility and visual feedback */
-#scam-form textarea,
-#image-upload-form input[type="file"] {
-    width: 100%;
-    padding: var(--spacing-sm);
+.form-group {
     margin-bottom: var(--spacing-md);
-    border-radius: var(--border-radius-sm);
-    border: 2px solid var(--color-border);
-    font-size: 1.1em;
-    background-color: var(--color-text);
-    color: var(--color-background);
-    min-height: 120px;
-    box-sizing: border-box;
-    transition: border-color var(--transition-normal);
 }
 
-#scam-form textarea:focus,
-#image-upload-form input[type="file"]:focus {
+#message-input {
+    width: 100%;
+    min-height: 200px;
+    max-height: 400px;
+    padding: var(--spacing-md);
+    font-size: 1rem;
+    line-height: 1.6;
+    border: 2px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-text);
+    color: var(--color-background);
+    box-sizing: border-box;
+    resize: vertical;
+    transition: all var(--transition-normal);
+}
+
+#message-input::placeholder {
+    color: #777;
+}
+
+#message-input:focus {
     border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.3);
+    background-color: #fff;
+}
+
+.char-counter {
+    text-align: right;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-xs);
+}
+
+.char-counter.near-limit {
+    color: var(--color-error);
+    font-weight: bold;
+}
+
+/* File Input Styling */
+.file-input-wrapper {
+    background-color: var(--color-background);
+    border: 2px dashed var(--color-border);
+    padding: var(--spacing-lg);
+    text-align: center;
+    border-radius: var(--border-radius-sm);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+    position: relative;
+    cursor: pointer;
+}
+
+.file-input-wrapper:hover,
+.file-input-wrapper.dragover {
+    background-color: var(--color-surface-dark);
+    border-color: var(--color-primary);
+}
+
+#image-file-input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.file-input-preview {
+    margin-top: var(--spacing-sm);
+    color: var(--color-text-muted);
+}
+
+#image-preview {
+    display: none;
+    max-width: 100%;
+    max-height: 120px;
+    margin-top: var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    object-fit: contain;
+}
+
+#file-name {
+    font-size: 0.9em;
+    display: block;
+}
+
+.file-requirements {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-xs);
+    text-align: center;
+}
+
+/* Button Styling */
+.analysis-form button[type="submit"] {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-xl);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    width: auto;
+    min-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.analysis-form button[type="submit"]:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 188, 156, 0.2);
+}
+
+.analysis-form button[type="submit"]:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.4);
+}
+
+.analysis-form button[type="submit"]:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.analysis-form button[type="submit"]:disabled {
+    background-color: #7f8c8d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.analysis-form .button-text + .spinner {
+    margin-left: 8px;
+}
+
+/* Spinner Animation */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Flash Message Styling */
+.alert {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-sm);
+    position: relative;
+    color: var(--color-text);
+}
+
+.alert-error {
+    background-color: rgba(231, 76, 60, 0.2);
+    border-color: var(--color-error);
+    color: var(--color-error-dark);
+}
+
+.alert-warning {
+    background-color: rgba(241, 196, 15, 0.2);
+    border-color: #f1c40f;
+    color: #856404;
+}
+
+.alert-success {
+    background-color: rgba(26, 188, 156, 0.2);
+    border-color: var(--color-primary);
+    color: #16a085;
+}
+
+.close-alert {
+    position: absolute;
+    top: 50%;
+    right: var(--spacing-md);
+    transform: translateY(-50%);
+    padding: 0 var(--spacing-sm);
+    color: inherit;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    opacity: 0.7;
+}
+
+.close-alert:hover {
+    opacity: 1;
+}
+
+/* Analysis Form Specific Styles */
+.analysis-form {
+    background-color: transparent;
+    padding: 0;
+    box-shadow: none;
 }
 
 /* Buttons - Improved accessibility and visual feedback */
@@ -463,8 +654,10 @@ main {
 }
 
 .upload-section h2 {
-    margin-bottom: 15px;
-    color: #ecf0f1;
+    font-size: clamp(1.5em, 4vw, 2em);
+    color: var(--color-text);
+    text-align: center;
+    margin-bottom: var(--spacing-md);
 }
 
 #image-upload-form button {
@@ -1313,5 +1506,241 @@ main {
         margin-top: 8px;
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* Wrapper for the main index page content for better control */
+.page-wrapper-index {
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-xl);
+}
+
+/* Styling for each analysis section (Text and Image) */
+.analysis-section {
+    background-color: var(--color-surface);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Header within each analysis section */
+.section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-header h1,
+.section-header h2 {
+    color: var(--color-text);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+}
+
+.section-header h1 {
+    font-size: clamp(2em, 5vw, 2.8em);
+}
+
+.section-header h2 {
+    font-size: clamp(1.6em, 4vw, 2.2em);
+}
+
+.section-header .subtitle {
+    color: var(--color-text-muted);
+    font-size: clamp(1em, 3vw, 1.25em);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* File Input Refinements */
+.file-input-wrapper {
+    background-color: var(--color-background);
+    border: 2px dashed var(--color-border);
+    padding: var(--spacing-lg);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.file-input-wrapper:hover,
+.file-input-wrapper.dragover {
+    background-color: var(--color-surface-dark);
+    border-color: var(--color-primary);
+}
+
+.file-input-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+}
+
+.file-input-icon {
+    width: 48px;
+    height: 48px;
+    fill: var(--color-text-muted);
+    margin-bottom: var(--spacing-sm);
+    transition: fill var(--transition-fast);
+}
+
+.file-input-wrapper:hover .file-input-icon {
+    fill: var(--color-primary);
+}
+
+.file-name-text {
+    font-size: 1em;
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-xs);
+}
+
+.file-input-wrapper:hover .file-name-text {
+    color: var(--color-text);
+}
+
+/* Separator between sections */
+.section-separator {
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+}
+
+.section-separator::before,
+.section-separator::after {
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    background-color: var(--color-border);
+    margin: 0 var(--spacing-sm);
+}
+
+.section-separator span {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Flash messages container styling */
+.flash-messages-container {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Input Header with Help Button */
+.input-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.help-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-surface-dark);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.help-button:hover {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-primary);
+}
+
+.help-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Help Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--color-surface);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.close-modal {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    transition: color var(--transition-fast);
+}
+
+.close-modal:hover {
+    color: var(--color-text);
+}
+
+.help-content {
+    margin-top: var(--spacing-md);
+}
+
+.help-content h3 {
+    color: var(--color-primary);
+    margin: var(--spacing-md) 0 var(--spacing-sm);
+    font-size: 1.2rem;
+}
+
+.help-content ol {
+    margin: 0;
+    padding-left: var(--spacing-lg);
+}
+
+.help-content li {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
+}
+
+.help-tip {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    background-color: var(--color-surface-dark);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--border-radius-sm);
+}
+
+.help-tip strong {
+    color: var(--color-primary);
+}
+
+/* Responsive adjustments for modal */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: var(--spacing-md);
+    }
+
+    .help-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
     }
 }

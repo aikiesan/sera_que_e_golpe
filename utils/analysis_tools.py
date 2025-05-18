@@ -23,16 +23,15 @@ class AnalysisTools:
     def __init__(self):
         self.google_safe_browsing_key = os.getenv('GOOGLE_SAFE_BROWSING_KEY')
         
-        # Configuração do Gemini
-        # We assume genai is already configured by app.py before this class is instantiated.
-        # If not, the model initialization will fail, which is an acceptable error.
+        # This model instance inside AnalysisTools will be used by its analyze_text_with_gemini
+        # It relies on genai.configure() having been called already (e.g., in app.py)
         try:
-            self.model = genai.GenerativeModel('gemini-1.5-flash')
-            logger.info("Modelo Gemini Flash (gemini-1.5-flash) referenciado com sucesso em AnalysisTools.")
+            self.internal_gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+            logger.info("AnalysisTools: Internal Gemini model initialized.")
         except Exception as e:
-            logger.error(f"Erro ao referenciar/inicializar modelo Gemini em AnalysisTools: {str(e)}")
-            logger.error("Certifique-se que a API do Google Gemini foi configurada globalmente (em app.py) antes de instanciar AnalysisTools.")
-            self.model = None
+            logger.error(f"AnalysisTools: Error initializing internal Gemini model: {str(e)}")
+            logger.error("Make sure genai.configure() was called before instantiating AnalysisTools.")
+            self.internal_gemini_model = None
         
         if platform.system() == 'Windows':
             tesseract_path_env = os.getenv('TESSERACT_PATH')
@@ -49,11 +48,11 @@ class AnalysisTools:
 
     async def analyze_text_with_gemini(self, text: str) -> Dict:
         """Analisa texto usando o Gemini Flash. Usado internamente por AnalysisTools."""
-        if not self.model:
-            logger.warning("AnalysisTools: Modelo Gemini não está configurado, não pode analisar texto.")
-            return {'error': 'Modelo Gemini não está configurado em AnalysisTools', 'risk_level': 'Indeterminado'}
+        if not self.internal_gemini_model:
+            logger.warning("AnalysisTools: Internal Gemini model not configured, cannot analyze text.")
+            return {'error': 'AnalysisTools: Modelo Gemini interno não configurado', 'risk_level': 'Indeterminado'}
 
-        if not text or len(text.strip()) < 10: # Basic check for empty or too short text
+        if not text or len(text.strip()) < 10:  # Basic check for empty or too short text
             logger.info(f"Texto muito curto ou vazio para análise Gemini em AnalysisTools: '{text[:20]}...'")
             return {
                 'risk_level': 'Não Analisável', 
@@ -79,7 +78,7 @@ class AnalysisTools:
 
             prompt = f"""
             Analise o seguinte texto, que foi extraído de uma imagem ou documento, para identificar possíveis golpes ou fraudes.
-            Se o texto for muito curto, genérico, ou claramente um erro de OCR (ex: ""), indique baixo risco ou incapacidade de análise.
+            Se o texto for muito curto, genérico, ou claramente um erro de OCR (ex: ""), indique baixo risco ou incapacidade de análise.
             Texto:
             ---
             {text}
@@ -95,7 +94,7 @@ class AnalysisTools:
             Forneça apenas o objeto JSON como resposta.
             """
 
-            response = await self.model.generate_content_async(
+            response = await self.internal_gemini_model.generate_content_async(
                 prompt,
                 generation_config=generation_config,
                 safety_settings=safety_settings
@@ -361,7 +360,7 @@ class AnalysisTools:
                         results['urls_found'].extend(urls)
                         logger.info(f"AnalysisTools: URLs found in text document: {urls}")
                         
-                        if self.model:
+                        if self.internal_gemini_model:
                             logger.info("AnalysisTools: Analyzing extracted document text with its own Gemini model...")
                             results['gemini_analysis'] = await self.analyze_text_with_gemini(results['text_content'])
                             
