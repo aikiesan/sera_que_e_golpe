@@ -6,11 +6,11 @@
 
 [![Feito com Google Gemini](https://img.shields.io/badge/Feito%20com-Google%20Gemini-blue.svg)](https://ai.google.dev/)
 [![Competição Alura](https://img.shields.io/badge/Competição-Alura%20%2B%20Google-orange.svg)](https://www.alura.com.br/)
-[![Status](https://img.shields.io/badge/Status-Em%20Competição-green.svg)](https://github.com/seu-usuario/sera-que-e-golpe)
+[![Status](https://img.shields.io/badge/Status-Em%20Competição-green.svg)](https://github.com/aikiesan/sera_que_e_golpe)
 
 *Protegendo nossos entes queridos contra golpes digitais com o poder da Inteligência Artificial* 🛡️
 
-[Demonstração ao Vivo](https://sera-que-e-golpe.herokuapp.com/) | [Vídeo de Apresentação](https://youtube.com/seu-video) | [Documentação](docs/README.md)
+[Demonstração ao Vivo](https://sera-que-e-golpe.herokuapp.com/) | [Documentação](docs/README.md)
 
 </div>
 
@@ -40,9 +40,10 @@ Desenvolvemos uma plataforma que:
    - Receba uma análise detalhada em segundos
    - Identificação de padrões de golpes conhecidos
 
-2. **Interface Amigável** 👴👵
+2. **Interface Amigável e Acessível** 👴👵
    - Design pensado para acessibilidade
-   - Tutorial interativo de como copiar e colar
+   - Botão de ajuda contextual "Como Copiar e Colar?" ao lado do campo de texto
+   - Modal de instruções detalhadas para copiar e colar (desktop e mobile)
    - Cores e textos de alta visibilidade
 
 3. **Inteligência Artificial Avançada** 🧠
@@ -60,7 +61,7 @@ Desenvolvemos uma plataforma que:
 - **Frontend:** HTML5, CSS3, JavaScript
 - **Backend:** Python, Flask
 - **IA:** Google Gemini API
-- **Segurança:** Flask-WTF, Google Safe Browsing API
+- **Segurança:** Flask-WTF (CSRF Protection), Google Safe Browsing API
 - **Deploy:** Docker, Heroku
 
 ## 🚀 Como Usar
@@ -74,20 +75,30 @@ Desenvolvemos uma plataforma que:
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/sera-que-e-golpe.git
+https://github.com/aikiesan/sera_que_e_golpe.git
 
 # Entre no diretório
-cd sera-que-e-golpe
+cd sera_que_e_golpe
 
 # Instale as dependências
 pip install -r requirements.txt
 
-# Configure as variáveis de ambiente
+# Configure as variáveis de ambiente (NUNCA compartilhe sua .env!)
 cp .env.example .env
+# Edite .env com suas chaves de API (Google Gemini, etc)
 
-# Rode o projeto
-python run.py
+# Rode o projeto em modo desenvolvimento
+python app.py
 ```
+
+- **Atenção:** O arquivo `.env` está no `.gitignore` e **NÃO será versionado**. Nunca compartilhe suas chaves de API.
+- Para produção, defina `FLASK_CONFIG=production` e configure variáveis de ambiente seguras.
+- CSRF está **desabilitado** no modo desenvolvimento e **habilitado** em produção para máxima segurança.
+
+## 🔒 Segurança
+- CSRF Protection: Ativo em produção, desativado em desenvolvimento para facilitar testes.
+- Tokens CSRF são gerados e enviados automaticamente nos formulários.
+- Nunca compartilhe seu `.env` ou chaves de API.
 
 ## 📊 Resultados e Impacto
 
